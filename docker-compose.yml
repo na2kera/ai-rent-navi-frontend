@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173" # ホストの5173ポートをコンテナの5173ポートにマッピング
+    volumes:
+      - .:/app # ホストの現在のディレクトリをコンテナの /app にマウント (ライブリロード用)
+      - /app/node_modules # ホストのnode_modulesがコンテナのnode_modulesを上書きしないようにする
+    environment:
+      - CHOKIDAR_USEPOLLING=true # ファイル変更監視をポーリングモードにする (Dockerボリュームで必要になる場合がある)
+      - WATCHPACK_POLLING=true # Webpack/Viteのファイル監視用
+      # Vite HMR WebSocket connection for Docker
+      - VITE_HMR_CLIENT_HOST=localhost
+      - VITE_HMR_CLIENT_PORT=5173
+    tty: true # 対話的なセッションを維持 (npmスクリプトで色付き出力など)
+    stdin_open: true # 標準入力を開いたままにする

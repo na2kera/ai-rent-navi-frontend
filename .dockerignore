@@ -1,0 +1,25 @@
+# Git関連
+.git
+.gitignore
+
+# Node.js関連
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Docker関連 (自己参照を避ける)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# ビルド成果物 (コンテナ内でビルドする場合)
+dist
+build
+
+# OS固有ファイル
+.DS_Store
+Thumbs.db
+
+# IDE設定ファイル
+.vscode
+.idea
