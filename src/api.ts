@@ -7,7 +7,6 @@ export interface RentPredictionRequest {
   rent: number;
 }
 
-// バックエンドschemas.pyのRentPredictionResponseに合わせて型定義
 export interface RentPredictionResponseFromBackend {
   input_conditions: RentPredictionRequest;
   predicted_rent: number;
@@ -18,8 +17,6 @@ export interface RentPredictionResponseFromBackend {
   price_evaluation: number;
 }
 
-// フロントエンドで利用する最終的なレスポンスの型を定義
-// difference, is_reasonable, message はフロントエンドで生成
 export interface ProcessedRentPredictionResponse {
   input_conditions: RentPredictionRequest;
   predicted_rent: number;
@@ -29,7 +26,6 @@ export interface ProcessedRentPredictionResponse {
   };
   price_evaluation: number;
   
-  // フロントエンドで追加で計算・生成するフィールド
   difference: number;
   is_reasonable: boolean;
   message: string;
