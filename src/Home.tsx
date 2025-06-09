@@ -2,26 +2,17 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
-  const [postalCode, setPostalCode] = useState('');
-  const [fullAddress, setFullAddress] = useState('');
+  const [area, setArea] = useState('');
   const [age, setAge] = useState('');
-  const [roomCount, setRoomCount] = useState('');
+  const [distance, setDistance] = useState('');
   const [rent, setRent] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     navigate('/result', {
-    state: {
-        postalCode,
-        fullAddress,
-        age,
-        roomCount,
-        rent
-    }
+      state: { area, age, distance, rent }
     });
-
   };
 
   return (
@@ -29,53 +20,47 @@ function Home() {
       <h1>AI家賃ナビ</h1>
       <form onSubmit={handleSubmit}>
         <div>
-            <label>郵便番号</label><br />
-            <input
-                value={postalCode}
-                onChange={(e) => setPostalCode(e.target.value)}
-                placeholder="例:123-4567"
-                required
-            />
-        </div>
-
-        <div>
-            <label>住所</label><br />
-            <input
-            value={fullAddress}
-            onChange={(e) => setFullAddress(e.target.value)}
-            placeholder="例:東京都新宿区西新宿1-1-1"
+          <label>面積 (㎡)</label><br />
+          <input
+            value={area}
+            onChange={(e) => setArea(e.target.value)}
+            placeholder="例: 40"
             required
-            />
+            type="number"
+          />
         </div>
 
         <div>
-            <label>築年数</label><br />
-            <input
+          <label>築年数</label><br />
+          <input
             value={age}
             onChange={(e) => setAge(e.target.value)}
-            placeholder="例:20"
+            placeholder="例: 20"
             required
-            />
+            type="number"
+          />
         </div>
 
         <div>
-            <label>部屋数</label><br />
-            <input
-            value={roomCount}
-            onChange={(e) => setRoomCount(e.target.value)}
-            placeholder="例:2LDK"
+          <label>最寄駅までの距離 (分)</label><br />
+          <input
+            value={distance}
+            onChange={(e) => setDistance(e.target.value)}
+            placeholder="例: 10"
             required
-            />
+            type="number"
+          />
         </div>
 
         <div>
-            <label>家賃価格</label><br />
-            <input
+          <label>家賃価格 (円)</label><br />
+          <input
             value={rent}
             onChange={(e) => setRent(e.target.value)}
-            placeholder="例:60000"
+            placeholder="例: 60000"
             required
-            />
+            type="number"
+          />
         </div>
 
         <div style={{ marginTop: '1rem' }}>
