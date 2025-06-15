@@ -1,3 +1,4 @@
+// frontend/api.ts
 import axios from 'axios';
 
 export interface RentPredictionRequest {
@@ -5,6 +6,8 @@ export interface RentPredictionRequest {
   age: number;
   distance: number;
   rent: number;
+  layout: number;
+  station_person: number;
 }
 
 export interface RentPredictionResponseFromBackend {
@@ -25,7 +28,7 @@ export interface ProcessedRentPredictionResponse {
     max: number;
   };
   price_evaluation: number;
-  
+
   difference: number;
   is_reasonable: boolean;
   message: string;
@@ -59,7 +62,6 @@ export const postRentPrediction = async (
     predicted_rent: backendData.predicted_rent,
     reasonable_range: backendData.reasonable_range,
     price_evaluation: backendData.price_evaluation,
-    
     difference: difference,
     is_reasonable: isReasonable,
     message: message,
