@@ -4,7 +4,7 @@ body {
   background: url('/image4.jpg') no-repeat center center fixed;
   background-size: cover;
   font-family: 'Noto Sans JP', 'Segoe UI', 'Roboto', sans-serif;
-  color: #333;
+  color: #222;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,7 +17,7 @@ body {
   width: 90%;
   background:
     url('/image5.jpg') no-repeat center top,
-    rgba(255, 255, 255, 0.75);
+    rgba(255, 255, 255, 0.85);
   background-size: 108% auto, auto;
   background-position: center top, center center;
   padding: 50px 20px 15px;
@@ -26,7 +26,7 @@ body {
   text-align: center;
   backdrop-filter: blur(3px);
   border: 1px solid rgba(200, 200, 200, 0.2);
-  color: #333;
+  color: #222;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -35,7 +35,6 @@ body {
   box-sizing: border-box;
 }
 
-/* フォームタイトル */
 .form-container h1 {
   font-family: 'Zen Kurenaido', 'Playfair Display', serif;
   font-size: 1.8rem;
@@ -48,7 +47,6 @@ body {
   z-index: 2;
 }
 
-/* フォーム行 */
 .form-row {
   display: flex;
   flex-direction: column;
@@ -56,7 +54,6 @@ body {
   margin-bottom: 0.2rem;
 }
 
-/* 入力フィールド全体 */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -66,48 +63,43 @@ body {
   margin-bottom: 0.6rem;
 }
 
-/* ラベル */
 label {
-  font-weight: 500;
-  color: #555;
+  font-weight: 600;
+  color: #222;
   margin-bottom: 0.2rem;
-  font-size: 1rem;      /* 大きく */
-  text-align: left;     /* 左寄せ */
+  font-size: 1rem;
+  text-align: left;
   width: 95%;
   max-width: 320px;
 }
 
-/* 入力フィールド */
 input {
   width: 95%;
   max-width: 320px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #bbb;
   border-radius: 6px;
   background-color: #fff;
   box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.05);
-  font-size: 1rem;      /* 大きめ */
-  color: #333;
+  font-size: 1rem;
+  color: #222;
   margin: 0 auto;
-  text-align: left;     /* 入力文字も左寄せ */
+  text-align: left;
   transition: border-color 0.2s ease-in-out;
 }
 
-/* 数字スピンボタン非表示 */
+input:focus {
+  outline: 2px solid #007bff;
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/* フォーカス時 */
-input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-/* ボタン */
 .submit-button {
   padding: 10px 30px;
   background: #007bff;
@@ -117,10 +109,9 @@ input:focus {
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s;
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
   margin-top: 1rem;
-  letter-spacing: 0.5px;
   width: 95%;
   max-width: 320px;
   display: block;
@@ -128,13 +119,15 @@ input:focus {
   margin-right: auto;
 }
 
-.submit-button:hover {
+.submit-button:hover,
+.submit-button:focus {
   background-color: #0056b3;
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
+  outline: 2px solid #0056b3;
+  outline-offset: 2px;
 }
 
-/* 結果コンテナ */
 .result-container {
   text-align: center;
 }
@@ -148,32 +141,29 @@ input:focus {
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-/* 結果テキスト */
 .result-container p {
-  font-size: 0.9rem;
+  font-size: 1rem;
   margin: 8px 0;
   font-weight: 400;
   letter-spacing: 0.02em;
-  color: #555;
+  color: #333;
 }
 
-/* 強調 */
 .result-container p strong {
   font-weight: 600;
-  color: #333;
+  color: #222;
   margin-right: 0.5rem;
 }
 
-/* 数値と通貨 */
 .result-container p:has(span.currency) {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 500;
-  color: #333;
+  color: #222;
 }
 
 .result-container span.value {
   font-weight: 600;
-  color: #333;
+  color: #222;
 }
 
 .result-container span.currency {
@@ -182,7 +172,6 @@ input:focus {
   margin-right: 3px;
 }
 
-/* 判定表示 */
 .result-container span.ok {
   color: #28a745;
   font-weight: 700;
@@ -195,7 +184,6 @@ input:focus {
   text-shadow: 0 0 3px #dc3545;
 }
 
-/* メッセージ */
 .important-message {
   font-weight: bold;
   font-size: 1.1em;
@@ -213,7 +201,6 @@ input:focus {
   text-shadow: 0 0 5px #dc3545;
 }
 
-/* スマホ対応 */
 @media (max-width: 480px) {
   .form-container {
     padding: 40px 15px 10px;
@@ -223,45 +210,28 @@ input:focus {
     font-size: 1.5rem;
     margin-bottom: 0.8rem;
   }
-  .form-group {
-    margin-bottom: 0.5rem;
-  }
   label {
     font-size: 1rem;
-    margin-bottom: 0.1rem;
-    width: 95%;
-    max-width: 320px;
-    text-align: left;
   }
   input {
-    padding: 9px;
-    font-size: 0.95rem;
-    width: 95%;
-    max-width: 320px;
-    text-align: left;
+    padding: 10px;
+    font-size: 1rem;
   }
   .submit-button {
-    padding: 9px 25px;
-    font-size: 0.9rem;
-    margin-top: 0.8rem;
-    width: 95%;
-    max-width: 320px;
+    padding: 10px 25px;
+    font-size: 1rem;
   }
   .result-container h2 {
     font-size: 1.5rem;
-    margin-bottom: 0.8rem;
   }
   .result-container p {
-    font-size: 0.8rem;
-    margin: 6px 0;
+    font-size: 0.95rem;
   }
   .important-message {
-    font-size: 0.85em;
-    margin-top: 0.8rem;
+    font-size: 1rem;
   }
 }
 
-/* タブレット・PC向け */
 @media (min-width: 768px) {
   .form-container {
     max-width: 450px;
@@ -269,36 +239,23 @@ input:focus {
   }
   .form-container h1 {
     font-size: 2.2rem;
-    margin-bottom: 1.5rem;
-  }
-  .form-group {
-    margin-bottom: 0.8rem;
   }
   label {
     font-size: 1.1rem;
-    width: 95%;
-    max-width: 320px;
-    text-align: left;
   }
   input {
     padding: 12px;
     font-size: 1.05rem;
-    width: 95%;
-    max-width: 320px;
-    text-align: left;
   }
   .submit-button {
     padding: 12px 35px;
     font-size: 1.1rem;
-    margin-top: 1.5rem;
-    width: 95%;
-    max-width: 320px;
   }
   .result-container h2 {
     font-size: 2.2rem;
   }
   .result-container p {
-    font-size: 1rem;
+    font-size: 1.05rem;
   }
   .important-message {
     font-size: 1.2em;
@@ -307,11 +264,15 @@ input:focus {
 
 .error-message {
   color: #dc3545;
-  font-size: 0.85rem;
-  margin-top: 0.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.3rem;
   text-align: left;
   width: 95%;
   max-width: 320px;
   margin-left: auto;
   margin-right: auto;
+  background-color: rgba(255, 230, 230, 0.4);
+  padding: 4px 8px;
+  border-left: 4px solid #dc3545;
 }
