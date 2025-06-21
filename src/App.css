@@ -1,3 +1,4 @@
+/* frontend/src/App.css */
 body {
   margin: 0;
   padding: 0;
@@ -13,14 +14,13 @@ body {
 }
 
 .form-container {
-  max-width: 350px;
+  max-width: 450px; /* 少し広げる */
   width: 90%;
   background:
-    url('/image5.jpg') no-repeat center top,
     rgba(255, 255, 255, 0.85);
   background-size: 108% auto, auto;
   background-position: center top, center center;
-  padding: 50px 20px 15px;
+  padding: 30px 20px 15px; /* 上下のpaddingを調整 */
   border-radius: 20px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -31,9 +31,31 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  overflow: hidden;
-  box-sizing: border-box;
+  /* スクロールに関する追加 */
+  max-height: 80vh; /* 画面の80%の高さを上限とする */
+  overflow-y: auto; /* 内容がmax-heightを超えた場合にスクロールバーを表示 */
+  box-sizing: border-box; /* paddingがwidth/heightに含まれるように */
 }
+
+/* スクロールバーのスタイル（任意、カスタマイズ） */
+.form-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.form-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.form-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.form-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 
 .form-container h1 {
   font-family: 'Zen Kurenaido', 'Playfair Display', serif;
@@ -47,12 +69,32 @@ body {
   z-index: 2;
 }
 
+.form-container h3 { /* オプション情報のタイトル */
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.2rem;
+  color: #34495e;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
 .form-row {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* 常に縦並びにする */
   align-items: center;
   margin-bottom: 0.2rem;
 }
+
+/* 2列表示にするための設定 (もし必要なら) */
+/* .form-row.two-columns {
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.form-row.two-columns .form-group {
+  width: 48%; /* 2列にするため */
+/* } */
 
 .form-group {
   display: flex;
@@ -73,7 +115,7 @@ label {
   max-width: 320px;
 }
 
-input {
+input, select, textarea { /* textareaも追加 */
   width: 95%;
   max-width: 320px;
   padding: 10px;
@@ -88,7 +130,7 @@ input {
   transition: border-color 0.2s ease-in-out;
 }
 
-input:focus {
+input:focus, select:focus, textarea:focus {
   outline: 2px solid #007bff;
   border-color: #007bff;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
@@ -130,7 +172,28 @@ input::-webkit-inner-spin-button {
 
 .result-container {
   text-align: center;
+  max-height: 80vh; /* 結果画面もスクロールできるように */
+  overflow-y: auto;
 }
+
+.result-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.result-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.result-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.result-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 
 .result-container h2 {
   font-family: 'Zen Kurenaido', 'Playfair Display', serif;
@@ -201,10 +264,21 @@ input::-webkit-inner-spin-button {
   text-shadow: 0 0 5px #dc3545;
 }
 
+/* オプション情報の区切り線 */
+.result-divider {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+  margin: 20px auto;
+  width: 80%;
+}
+
+
 @media (max-width: 480px) {
   .form-container {
-    padding: 40px 15px 10px;
+    padding: 20px 15px 10px; /* 小さい画面でpadding調整 */
     max-width: 300px;
+    max-height: 90vh; /* より多くの高さを許可 */
   }
   .form-container h1 {
     font-size: 1.5rem;
@@ -213,7 +287,7 @@ input::-webkit-inner-spin-button {
   label {
     font-size: 1rem;
   }
-  input {
+  input, select, textarea {
     padding: 10px;
     font-size: 1rem;
   }
@@ -234,8 +308,9 @@ input::-webkit-inner-spin-button {
 
 @media (min-width: 768px) {
   .form-container {
-    max-width: 450px;
-    padding: 80px 30px 20px;
+    max-width: 550px; /* さらに広げる */
+    max-height: 70vh; /* 少し高さを抑える */
+    padding: 40px 30px 20px;
   }
   .form-container h1 {
     font-size: 2.2rem;
@@ -243,7 +318,7 @@ input::-webkit-inner-spin-button {
   label {
     font-size: 1.1rem;
   }
-  input {
+  input, select, textarea {
     padding: 12px;
     font-size: 1.05rem;
   }
