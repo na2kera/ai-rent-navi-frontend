@@ -1,25 +1,14 @@
 // frontend/api.ts
-import axios from 'axios';
 
+import axios from 'axios'; // axiosのインスタンスが適切に設定されていることを確認してください
+
+// バックエンドのRentPredictionRequestに完全に合わせます
 export interface RentPredictionRequest {
-  // 必須項目
-  address: string; // 新規: 住所
-  structure: number; // 新規: 構造 (例: 1=木造, 2=RCなど数値でマッピング)
-  nearest_station: string; // 新規: 最寄り駅
-  distance_from_station: number; // 新規: 最寄駅からの分数 (以前のdistanceと似ていますが、明確化)
-  area: number; // 既存: 面積
-  layout: number; // 既存: 間取り
-
-  age: number; // 既存: 築年数
-  rent: number; // 既存: 家賃価格
-
-  // オプション項目 (undefinedを許容)
-  parking_spaces?: number; // 新規: 駐車場数
-  deposit?: number; // 新規: 敷金 (単位は rent と合わせるか、別途定義)
-  key_money?: number; // 新規: 礼金 (単位は rent と合わせるか、別途定義)
-  management_fee?: number; // 新規: 管理費
-  total_units?: number; // 新規: 総戸数
-  conditions?: string; // 新規: 条件 (テキスト入力)
+  area: number;
+  age: number;
+  layout: number;
+  station_person: number;
+  rent: number; // 万円単位で送信されることを想定
 }
 
 export interface RentPredictionResponseFromBackend {
@@ -34,30 +23,54 @@ export interface RentPredictionResponseFromBackend {
 
 export interface ProcessedRentPredictionResponse {
   input_conditions: RentPredictionRequest;
-  predicted_rent: number;
+  predicted_rent: number; // 円単位
   reasonable_range: {
-    min: number;
-    max: number;
+    min: number; // 円単位
+    max: number; // 円単位
   };
   price_evaluation: number;
 
-  difference: number;
+  difference: number; // 円単位
   is_reasonable: boolean;
   message: string;
 }
 
 export const postRentPrediction = async (
-  data: RentPredictionRequest
+  data: {
+    area: number;
+    age: number;
+    layout: number;
+    distance_from_station: number; // この値はここでは使用しない（ダミー値を使用するため）
+    rent: number; // 円単位で受け取る
+  }
 ): Promise<ProcessedRentPredictionResponse> => {
+  // バックエンドのAPIが期待する形式にペイロードを変換
+  // FastAPIのスキーマが期待する全てのフィールドを送信
+  const payload: RentPredictionRequest = {
+    area: data.area,
+    age: data.age,
+    layout: data.layout, // InputFormから受け取ったlayoutをそのまま送信
+    station_person: 50, // ダミー値で送信
+    rent: Math.max(1, data.rent / 10000), // 円を万円に変換して送信。最低1万円を保証
+  };
+
+  // ★★★ この部分が最重要修正点です！ ★★★
+  // ここでpayloadオブジェクト全体を送信することで、FastAPIのバリデーションを通過させます。
   const response = await axios.post<RentPredictionResponseFromBackend>(
-    'http://localhost:8000/api/v1/predict',
-    data
+    'http://localhost:8000/api/v1/predict', // バックエンドのURL
+    payload // ★★★ payloadオブジェクト全体を送信する！ ★★★
   );
 
   const backendData = response.data;
 
-  const difference = data.rent - backendData.predicted_rent;
-  const isReasonable = data.rent >= backendData.reasonable_range.min && data.rent <= backendData.reasonable_range.max;
+  // バックエンドからのpredicted_rentとreasonable_rangeは万円単位なので、フロントエンド表示用に円に戻す
+  const predictedRentYen = backendData.predicted_rent * 10000;
+  const reasonableMinYen = backendData.reasonable_range.min * 10000;
+  const reasonableMaxYen = backendData.reasonable_range.max * 10000;
+
+  // 入力された家賃（円）と予測家賃（円）の差分
+  const difference = data.rent - predictedRentYen;
+  const isReasonable = data.rent >= reasonableMinYen && data.rent <= reasonableMaxYen;
 
   let message = '';
   switch (backendData.price_evaluation) {
@@ -70,9 +83,12 @@ export const postRentPrediction = async (
   }
 
   return {
-    input_conditions: backendData.input_conditions,
-    predicted_rent: backendData.predicted_rent,
-    reasonable_range: backendData.reasonable_range,
+    input_conditions: backendData.input_conditions, // バックエンドが解釈した条件をそのまま返す
+    predicted_rent: predictedRentYen,
+    reasonable_range: {
+      min: reasonableMinYen,
+      max: reasonableMaxYen,
+    },
     price_evaluation: backendData.price_evaluation,
     difference: difference,
     is_reasonable: isReasonable,
