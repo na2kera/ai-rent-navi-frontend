@@ -1,6 +1,6 @@
 // frontend/api.ts
 
-import axios from 'axios'; // axiosのインスタンスが適切に設定されていることを確認してください
+import axios from "axios"; // axiosのインスタンスが適切に設定されていることを確認してください
 
 // バックエンドのRentPredictionRequestに完全に合わせます
 export interface RentPredictionRequest {
@@ -35,15 +35,13 @@ export interface ProcessedRentPredictionResponse {
   message: string;
 }
 
-export const postRentPrediction = async (
-  data: {
-    area: number;
-    age: number;
-    layout: number;
-    distance_from_station: number; // この値はここでは使用しない（ダミー値を使用するため）
-    rent: number; // 円単位で受け取る
-  }
-): Promise<ProcessedRentPredictionResponse> => {
+export const postRentPrediction = async (data: {
+  area: number;
+  age: number;
+  layout: number;
+  distance_from_station: number; // この値はここでは使用しない（ダミー値を使用するため）
+  rent: number; // 円単位で受け取る
+}): Promise<ProcessedRentPredictionResponse> => {
   // バックエンドのAPIが期待する形式にペイロードを変換
   // FastAPIのスキーマが期待する全てのフィールドを送信
   const payload: RentPredictionRequest = {
@@ -57,7 +55,7 @@ export const postRentPrediction = async (
   // ★★★ この部分が最重要修正点です！ ★★★
   // ここでpayloadオブジェクト全体を送信することで、FastAPIのバリデーションを通過させます。
   const response = await axios.post<RentPredictionResponseFromBackend>(
-    'http://localhost:8000/api/v1/predict', // バックエンドのURL
+    "/api/v1/predict", // バックエンドのURLを相対パスに変更
     payload // ★★★ payloadオブジェクト全体を送信する！ ★★★
   );
 
@@ -70,16 +68,29 @@ export const postRentPrediction = async (
 
   // 入力された家賃（円）と予測家賃（円）の差分
   const difference = data.rent - predictedRentYen;
-  const isReasonable = data.rent >= reasonableMinYen && data.rent <= reasonableMaxYen;
+  const isReasonable =
+    data.rent >= reasonableMinYen && data.rent <= reasonableMaxYen;
 
-  let message = '';
+  let message = "";
   switch (backendData.price_evaluation) {
-    case 1: message = '現在の家賃は相場よりもかなり割安'; break;
-    case 2: message = '現在の家賃は相場よりも少し安い'; break;
-    case 3: message = '現在の家賃は相場通り'; break;
-    case 4: message = '現在の家賃は相場よりも少し高い'; break;
-    case 5: message = '現在の家賃は相場よりもかなり割高'; break;
-    default: message = '価格評価ができません'; break;
+    case 1:
+      message = "現在の家賃は相場よりもかなり割安";
+      break;
+    case 2:
+      message = "現在の家賃は相場よりも少し安い";
+      break;
+    case 3:
+      message = "現在の家賃は相場通り";
+      break;
+    case 4:
+      message = "現在の家賃は相場よりも少し高い";
+      break;
+    case 5:
+      message = "現在の家賃は相場よりもかなり割高";
+      break;
+    default:
+      message = "価格評価ができません";
+      break;
   }
 
   return {
