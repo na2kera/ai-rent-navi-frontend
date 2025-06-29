@@ -1,78 +1,68 @@
-/* frontend/src/App.css */
 body {
   margin: 0;
   padding: 0;
-  background: url('/image4.jpg') no-repeat center center fixed;
-  background-size: cover;
-  font-family: 'Noto Sans JP', 'Segoe UI', 'Roboto', sans-serif;
+  /* background: url('/image_76b7cf.png') no-repeat center center fixed; */
+  /* background-size: cover; */
+  /* 上記の背景画像関連の行を削除しました */
+  font-family: 'Spline Sans', 'Noto Sans JP', 'Segoe UI', 'Roboto', sans-serif;
   color: #222;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: block;
   min-height: 100vh;
   position: relative;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 20px;
+  padding-bottom: 90px; /* submit-button の高さとマージンを考慮 */
 }
 
 .form-container {
-  max-width: 450px; /* 少し広げる */
-  width: 90%;
-  background:
-    rgba(255, 255, 255, 0.85);
-  background-size: 108% auto, auto;
-  background-position: center top, center center;
-  padding: 30px 20px 15px; /* 上下のpaddingを調整 */
+  width: 100%;
+  max-width: 98%;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 30px 20px 15px;
   border-radius: 20px;
-  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  backdrop-filter: blur(3px);
-  border: 1px solid rgba(200, 200, 200, 0.2);
+  text-align: left;
   color: #222;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* スクロールに関する追加 */
-  max-height: 80vh; /* 画面の80%の高さを上限とする */
-  overflow-y: auto; /* 内容がmax-heightを超えた場合にスクロールバーを表示 */
-  box-sizing: border-box; /* paddingがwidth/heightに含まれるように */
+  /* 下部の submit-button の領域を考慮して高さを調整 */
+  max-height: calc(100vh - (20px + 90px + 20px));
+  overflow-y: auto;
+  box-sizing: border-box;
+  margin: 0 auto 20px;
 }
 
-/* スクロールバーのスタイル（任意、カスタマイズ） */
 .form-container::-webkit-scrollbar {
   width: 8px;
 }
-
 .form-container::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
 }
-
 .form-container::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 10px;
 }
-
 .form-container::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
-
 .form-container h1 {
-  font-family: 'Zen Kurenaido', 'Playfair Display', serif;
-  font-size: 1.8rem;
-  color: #2c3e50;
+  font-family: 'Spline Sans', sans-serif;
+  font-weight: 700;
+  font-size: 2.25rem;
+  color: #161111;
   margin-top: 0;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.5rem;
   letter-spacing: 1px;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  text-shadow: none;
   position: relative;
   z-index: 2;
+  text-align: center;
 }
 
-.form-container h3 { /* オプション情報のタイトル */
-  font-family: 'Noto Sans JP', sans-serif;
+.form-container h3 {
+  font-family: 'Spline Sans', sans-serif;
   font-size: 1.2rem;
-  color: #34495e;
+  color: #161111;
   margin-top: 1.5rem;
   margin-bottom: 1rem;
   text-align: center;
@@ -80,60 +70,71 @@ body {
 
 .form-row {
   display: flex;
-  flex-direction: column; /* 常に縦並びにする */
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   margin-bottom: 0.2rem;
 }
-
-/* 2列表示にするための設定 (もし必要なら) */
-/* .form-row.two-columns {
-  flex-direction: row;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.form-row.two-columns .form-group {
-  width: 48%; /* 2列にするため */
-/* } */
 
 .form-group {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   width: 100%;
   margin-bottom: 0.6rem;
 }
 
 label {
-  font-weight: 600;
-  color: #222;
+  font-family: 'Spline Sans', sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #161111;
   margin-bottom: 0.2rem;
-  font-size: 1rem;
   text-align: left;
-  width: 95%;
-  max-width: 320px;
+  width: 100%;
+  max-width: none;
 }
 
-input, select, textarea { /* textareaも追加 */
-  width: 95%;
-  max-width: 320px;
-  padding: 10px;
-  border: 1px solid #bbb;
-  border-radius: 6px;
-  background-color: #fff;
-  box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.05);
+input,
+select,
+textarea {
+  width: 96% !important;
+  max-width: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 8px 12px;
+  min-height: 40px;
+  border-radius: 12px;
+  background-color: #f4eff2;
+  border: 1px solid #896070;
+  font-family: 'Spline Sans', sans-serif;
   font-size: 1rem;
   color: #222;
-  margin: 0 auto;
   text-align: left;
-  transition: border-color 0.2s ease-in-out;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-shadow: none;
 }
 
-input:focus, select:focus, textarea:focus {
-  outline: 2px solid #007bff;
-  border-color: #007bff;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+input::placeholder,
+textarea::placeholder {
+  color: #896070;
+  opacity: 1;
+}
+
+select {
+  color: #896070;
+}
+select:valid {
+  color: #222;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #ea115b;
+  box-shadow: 0 0 0 2px rgba(234, 17, 91, 0.3);
 }
 
 input::-webkit-outer-spin-button,
@@ -142,66 +143,95 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+/* 画面下部に固定されるボタン用 */
 .submit-button {
-  padding: 10px 30px;
-  background: #007bff;
-  color: #ffffff;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  background-color: #ea115b;
+  border-radius: 24px;
+  min-height: 48px;
+  padding: 12px 30px;
+  color: white;
+  font-family: 'Spline Sans', sans-serif;
+  font-weight: 700;
   font-size: 1rem;
+  border: none;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-  margin-top: 1rem;
-  width: 95%;
-  max-width: 320px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  box-shadow: 0 4px 12px rgba(234, 17, 91, 0.3);
+  z-index: 1000; /* 最前面に表示 */
 }
 
 .submit-button:hover,
 .submit-button:focus {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
-  outline: 2px solid #0056b3;
-  outline-offset: 2px;
+  background-color: #d60f4d;
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 6px 15px rgba(234, 17, 91, 0.5);
+  outline: none;
 }
+
+/* 詳細トグルボタン用 (通常のフローで表示) */
+.detail-toggle-button {
+  display: block; /* ブロック要素として表示 */
+  width: 200px; /* 固定幅 */
+  margin: 1rem auto; /* 中央寄せ */
+  background-color: #ea115b; /* submit-button と同じピンク色に統一 */
+  border-radius: 24px;
+  min-height: 48px;
+  padding: 12px 30px;
+  color: white;
+  font-family: 'Spline Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+  box-shadow: 0 4px 12px rgba(234, 17, 91, 0.3);
+  z-index: 1; /* submit-button より低い z-index */
+}
+
+.detail-toggle-button:hover,
+.detail-toggle-button:focus {
+  background-color: #d60f4d; /* submit-button と同じホバー色に統一 */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(234, 17, 91, 0.5);
+  outline: none;
+}
+
 
 .result-container {
   text-align: center;
-  max-height: 80vh; /* 結果画面もスクロールできるように */
+  /* submit-button と footer の領域を考慮して高さを調整 */
+  max-height: calc(100vh - (20px + 90px + 20px));
   overflow-y: auto;
+  padding-bottom: 20px; /* ボタンとの隙間 */
 }
 
 .result-container::-webkit-scrollbar {
   width: 8px;
 }
-
 .result-container::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
 }
-
 .result-container::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 10px;
 }
-
 .result-container::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
-
 .result-container h2 {
-  font-family: 'Zen Kurenaido', 'Playfair Display', serif;
+  font-family: 'Spline Sans', sans-serif;
   font-size: 2rem;
   color: #2c3e50;
   margin-bottom: 1rem;
   letter-spacing: 1px;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  text-shadow: none;
 }
 
 .result-container p {
@@ -228,19 +258,16 @@ input::-webkit-inner-spin-button {
   font-weight: 600;
   color: #222;
 }
-
 .result-container span.currency {
   color: #007bff;
   font-weight: 700;
   margin-right: 3px;
 }
-
 .result-container span.ok {
   color: #28a745;
   font-weight: 700;
   text-shadow: 0 0 3px #28a745;
 }
-
 .result-container span.ng {
   color: #dc3545;
   font-weight: 700;
@@ -254,17 +281,17 @@ input::-webkit-inner-spin-button {
   text-align: center;
 }
 
+/* 「現在の家賃は相場よりもかなり割安」を赤文字にするために、
+   isReasonableがtrueの場合（okクラス）も赤色に変更 */
 .important-message.ok {
-  color: #28a745;
-  text-shadow: 0 0 5px #28a745;
+  color: #dc3545; /* 赤色に変更 */
+  text-shadow: 0 0 5px #dc3545; /* 赤色の影 */
 }
-
 .important-message.ng {
   color: #dc3545;
   text-shadow: 0 0 5px #dc3545;
 }
 
-/* オプション情報の区切り線 */
 .result-divider {
   border: 0;
   height: 1px;
@@ -273,61 +300,93 @@ input::-webkit-inner-spin-button {
   width: 80%;
 }
 
-
 @media (max-width: 480px) {
+  body {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 70px;
+  }
   .form-container {
-    padding: 20px 15px 10px; /* 小さい画面でpadding調整 */
-    max-width: 300px;
-    max-height: 90vh; /* より多くの高さを許可 */
+    padding: 20px 15px 10px;
+    max-width: 100%;
+    max-height: calc(100vh - (10px + 70px + 10px));
+    margin-bottom: 10px;
   }
   .form-container h1 {
-    font-size: 1.5rem;
-    margin-bottom: 0.8rem;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
   }
   label {
-    font-size: 1rem;
-  }
-  input, select, textarea {
-    padding: 10px;
-    font-size: 1rem;
-  }
-  .submit-button {
-    padding: 10px 25px;
-    font-size: 1rem;
-  }
-  .result-container h2 {
-    font-size: 1.5rem;
-  }
-  .result-container p {
     font-size: 0.95rem;
   }
+  input, select, textarea {
+    padding: 6px 10px;
+    min-height: 36px;
+    font-size: 0.95rem;
+    width: 94% !important;
+  }
+  .submit-button {
+    width: calc(100% - 20px);
+    padding: 10px 25px;
+    min-height: 44px;
+    font-size: 0.95rem;
+  }
+  .detail-toggle-button { /* Media Query for detail-toggle-button */
+    width: 180px; /* モバイルでの幅調整 */
+    padding: 10px 25px;
+    min-height: 44px;
+    font-size: 0.95rem;
+  }
+  .result-container h2 {
+    font-size: 1.8rem;
+  }
+  .result-container p {
+    font-size: 0.9rem;
+  }
   .important-message {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 }
 
 @media (min-width: 768px) {
+  body {
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 30px;
+    padding-bottom: 110px;
+  }
   .form-container {
-    max-width: 550px; /* さらに広げる */
-    max-height: 70vh; /* 少し高さを抑える */
+    max-height: calc(100vh - (30px + 110px + 30px));
     padding: 40px 30px 20px;
+    margin-bottom: 30px;
   }
   .form-container h1 {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
   }
   label {
-    font-size: 1.1rem;
-  }
-  input, select, textarea {
-    padding: 12px;
     font-size: 1.05rem;
   }
+  input, select, textarea {
+    padding: 10px 14px;
+    min-height: 44px;
+    font-size: 1.05rem;
+    width: 96% !important;
+  }
   .submit-button {
-    padding: 12px 35px;
+    width: calc(100% - 80px);
+    padding: 14px 40px;
+    min-height: 52px;
+    font-size: 1.1rem;
+  }
+  .detail-toggle-button { /* Media Query for detail-toggle-button */
+    width: 220px; /* デスクトップでの幅調整 */
+    padding: 14px 40px;
+    min-height: 52px;
     font-size: 1.1rem;
   }
   .result-container h2 {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
   }
   .result-container p {
     font-size: 1.05rem;
@@ -339,7 +398,7 @@ input::-webkit-inner-spin-button {
 
 .error-message {
   color: #dc3545;
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 600;
   margin-top: 0.3rem;
   text-align: left;
@@ -350,4 +409,14 @@ input::-webkit-inner-spin-button {
   background-color: rgba(255, 230, 230, 0.4);
   padding: 4px 8px;
   border-left: 4px solid #dc3545;
+  border-radius: 4px;
+}
+
+/* 詳細情報を黒文字で明示的に表示 */
+.detail-section {
+  margin-top: 1rem;
+  text-align: left;
+  color: #000;
+  font-size: 1rem;
+  line-height: 1.6;
 }
