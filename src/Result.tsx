@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { postRentPrediction } from "./api";
 import type { ProcessedRentPredictionResponse } from "./api";
+import { saveHistoryItem } from "./historyUtils";
+import type { PropertyInput, PredictionResult } from "./types";
 import "./App.css"; // App.css をインポート
 
 function Result() {
@@ -57,6 +59,34 @@ function Result() {
     queryFn: () => postRentPrediction(inputForPrediction),
     retry: false, // エラー発生時のリトライを無効化
   });
+
+  // データが正常に取得できた場合、履歴に保存
+  useEffect(() => {
+    if (data && location.state) {
+      const historyInput: PropertyInput = {
+        postal_code: postal_code || "",
+        address: address || "",
+        nearest_station: nearest_station || "",
+        distance_from_station: parseInt(distance_from_station) || 0,
+        area: parseFloat(area) || 0,
+        age: parseInt(age) || 0,
+        structure: parseInt(structure) || 0,
+        layout: parseInt(layout) || 0,
+        rent: parseFloat(rent) || 0,
+        management_fee: management_fee ? parseFloat(management_fee) : undefined,
+        total_units: total_units ? parseInt(total_units) : undefined,
+      };
+
+      const historyResult: PredictionResult = {
+        predicted_rent: data.predicted_rent,
+        difference: data.difference,
+        is_reasonable: data.is_reasonable,
+        message: data.message,
+      };
+
+      saveHistoryItem(historyInput, historyResult);
+    }
+  }, [data, location.state, postal_code, address, nearest_station, distance_from_station, area, age, structure, layout, rent, management_fee, total_units]);
 
   // ローディング中の表示
   if (isLoading)
@@ -221,10 +251,21 @@ function Result() {
         </div>
       )}
 
-      {/* 「再判定する」ボタンは画面下部に固定 */}
-      <button onClick={() => navigate("/")} className="submit-button">
-        再判定する
-      </button>
+      {/* ナビゲーションボタンエリア */}
+      <div style={{ textAlign: "center", marginTop: "2rem", marginBottom: "1rem", display: "flex", flexDirection: "column", gap: "10px", alignItems: "center" }}>
+        <button 
+          onClick={() => navigate("/history")} 
+          className="detail-toggle-button"
+          style={{ width: "200px", position: "static", transform: "none" }}
+        >
+          判定履歴を見る
+        </button>
+        
+        {/* 「再判定する」ボタンは画面下部に固定 */}
+        <button onClick={() => navigate("/", { state: location.state })} className="submit-button">
+          再判定する
+        </button>
+      </div>
     </div>
   );
 }

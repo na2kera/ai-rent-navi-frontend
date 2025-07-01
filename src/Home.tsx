@@ -1,24 +1,26 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Home() {
-  // 必須項目
-  const [postal_code, setPostalCode] = useState(""); // 郵便番号
-  const [address, setAddress] = useState(""); // 住所
-  const [nearest_station, setNearestStation] = useState(""); // 最寄り駅
-  const [distance_from_station, setDistanceFromStation] = useState(""); // 最寄駅からの分数
-  const [area, setArea] = useState(""); // 面積
-  const [age, setAge] = useState(""); // 築年数
-  const [structure, setStructure] = useState(""); // 構造
-  const [layout, setLayout] = useState(""); // 間取り
-  const [rent, setRent] = useState(""); // 家賃価格
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // オプション項目
-  const [management_fee, setManagementFee] = useState(""); // 管理費
-  const [total_units, setTotalUnits] = useState(""); // 総戸数
+  // 必須項目 - location.stateから初期値を設定
+  const [postal_code, setPostalCode] = useState(location.state?.postal_code || ""); // 郵便番号
+  const [address, setAddress] = useState(location.state?.address || ""); // 住所
+  const [nearest_station, setNearestStation] = useState(location.state?.nearest_station || ""); // 最寄り駅
+  const [distance_from_station, setDistanceFromStation] = useState(location.state?.distance_from_station?.toString() || ""); // 最寄駅からの分数
+  const [area, setArea] = useState(location.state?.area?.toString() || ""); // 面積
+  const [age, setAge] = useState(location.state?.age?.toString() || ""); // 築年数
+  const [structure, setStructure] = useState(location.state?.structure?.toString() || ""); // 構造
+  const [layout, setLayout] = useState(location.state?.layout?.toString() || ""); // 間取り
+  const [rent, setRent] = useState(location.state?.rent?.toString() || ""); // 家賃価格
+
+  // オプション項目 - location.stateから初期値を設定
+  const [management_fee, setManagementFee] = useState(location.state?.management_fee?.toString() || ""); // 管理費
+  const [total_units, setTotalUnits] = useState(location.state?.total_units?.toString() || ""); // 総戸数
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const navigate = useNavigate();
 
   // 半角数字のみ・整数かを判定
   const isValidInteger = (value: string) =>
@@ -131,6 +133,17 @@ function Home() {
   return (
     <div className="form-container">
       <h1>AI家賃ナビ</h1>
+
+      <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+        <button 
+          type="button" 
+          onClick={() => navigate("/history")} 
+          className="detail-toggle-button"
+          style={{ width: "200px", margin: "0 auto" }}
+        >
+          判定履歴を見る
+        </button>
+      </div>
 
       <form onSubmit={handleSubmit}>
         {/* 必須項目: 郵便番号 */}
