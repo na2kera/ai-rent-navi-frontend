@@ -1,23 +1,42 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import OcrCameraModal from "./OcrCameraModal";
 import { extractRentalPropertyData } from "./geminiService";
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+
 
 function Home() {
-  // 必須項目
-  const [postal_code, setPostalCode] = useState(""); // 郵便番号
-  const [address, setAddress] = useState(""); // 住所
-  const [nearest_station, setNearestStation] = useState(""); // 最寄り駅
-  const [distance_from_station, setDistanceFromStation] = useState(""); // 最寄駅からの分数
-  const [area, setArea] = useState(""); // 面積
-  const [age, setAge] = useState(""); // 築年数
-  const [structure, setStructure] = useState(""); // 構造
-  const [layout, setLayout] = useState(""); // 間取り
-  const [rent, setRent] = useState(""); // 家賃価格
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // オプション項目
-  const [management_fee, setManagementFee] = useState(""); // 管理費
-  const [total_units, setTotalUnits] = useState(""); // 総戸数
+  // 必須項目 - location.stateから初期値を設定
+  const [postal_code, setPostalCode] = useState(
+    location.state?.postal_code || ""
+  ); // 郵便番号
+  const [address, setAddress] = useState(location.state?.address || ""); // 住所
+  const [nearest_station, setNearestStation] = useState(
+    location.state?.nearest_station || ""
+  ); // 最寄り駅
+  const [distance_from_station, setDistanceFromStation] = useState(
+    location.state?.distance_from_station?.toString() || ""
+  ); // 最寄駅からの分数
+  const [area, setArea] = useState(location.state?.area?.toString() || ""); // 面積
+  const [age, setAge] = useState(location.state?.age?.toString() || ""); // 築年数
+  const [structure, setStructure] = useState(
+    location.state?.structure?.toString() || ""
+  ); // 構造
+  const [layout, setLayout] = useState(
+    location.state?.layout?.toString() || ""
+  ); // 間取り
+  const [rent, setRent] = useState(location.state?.rent?.toString() || ""); // 家賃価格
+
+  // オプション項目 - location.stateから初期値を設定
+  const [management_fee, setManagementFee] = useState(
+    location.state?.management_fee?.toString() || ""
+  ); // 管理費
+  const [total_units, setTotalUnits] = useState(
+    location.state?.total_units?.toString() || ""
+  ); // 総戸数
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOcrModalOpen, setIsOcrModalOpen] = useState(false);
@@ -36,8 +55,18 @@ function Home() {
     const requiredFields = [
       { key: "postal_code", value: postal_code, type: "text", msg: "郵便番号" },
       { key: "address", value: address, type: "text", msg: "住所" },
-      { key: "nearest_station", value: nearest_station, type: "text", msg: "最寄り駅" },
-      { key: "distance_from_station", value: distance_from_station, type: "number", msg: "最寄駅からの分数" },
+      {
+        key: "nearest_station",
+        value: nearest_station,
+        type: "text",
+        msg: "最寄り駅",
+      },
+      {
+        key: "distance_from_station",
+        value: distance_from_station,
+        type: "number",
+        msg: "最寄駅からの分数",
+      },
       { key: "area", value: area, type: "number", msg: "面積" },
       { key: "age", value: age, type: "number", msg: "築年数" },
       { key: "structure", value: structure, type: "number", msg: "構造" },
@@ -58,7 +87,11 @@ function Home() {
         }
       }
       // 郵便番号のバリデーションを追加
-      if (key === "postal_code" && value.trim() !== "" && !/^\d{7}$/.test(value)) {
+      if (
+        key === "postal_code" &&
+        value.trim() !== "" &&
+        !/^\d{7}$/.test(value)
+      ) {
         newErrors[key] = "郵便番号は半角数字7桁で入力してください。";
       }
     });
@@ -131,6 +164,7 @@ function Home() {
     });
   };
 
+
   const handleOcrCapture = async (imageData: string) => {
     try {
       const extractedData = await extractRentalPropertyData(imageData);
@@ -154,7 +188,20 @@ function Home() {
     } catch (error) {
       console.error("OCR error:", error);
       alert(error instanceof Error ? error.message : "OCR処理中にエラーが発生しました。");
-    }
+
+  const handleReset = () => {
+    setPostalCode("");
+    setAddress("");
+    setNearestStation("");
+    setDistanceFromStation("");
+    setArea("");
+    setAge("");
+    setStructure("");
+    setLayout("");
+    setRent("");
+    setManagementFee("");
+    setTotalUnits("");
+    setErrors({});
   };
 
   return (
@@ -169,7 +216,48 @@ function Home() {
         📷 OCR で読み取り
       </button>
 
-      <form onSubmit={handleSubmit}>
+      <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+        <button
+          type="button"
+          onClick={() => navigate("/history")}
+          className="detail-toggle-button"
+          style={{ width: "200px", margin: "0 auto" }}
+        >
+          判定履歴を見る
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} style={{ position: "relative" }}>
+        <button
+          type="button"
+          onClick={handleReset}
+          className="detail-toggle-button"
+          style={{
+            position: "absolute",
+            top: "-120px",
+            left: "0",
+            width: "70px",
+            fontSize: "11px",
+            padding: "4px 8px",
+            minHeight: "28px",
+            backgroundColor: "#6c757d",
+            borderColor: "#6c757d",
+            boxShadow: "none",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = "#5a6268";
+            e.currentTarget.style.borderColor = "#5a6268";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = "#6c757d";
+            e.currentTarget.style.borderColor = "#6c757d";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+        >
+          リセット
+        </button>
+
         {/* 必須項目: 郵便番号 */}
         <div className="form-row">
           <div className="form-group">

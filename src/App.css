@@ -4,7 +4,7 @@ body {
   /* background: url('/image_76b7cf.png') no-repeat center center fixed; */
   /* background-size: cover; */
   /* 上記の背景画像関連の行を削除しました */
-  font-family: 'Spline Sans', 'Noto Sans JP', 'Segoe UI', 'Roboto', sans-serif;
+  font-family: "Spline Sans", "Noto Sans JP", "Segoe UI", "Roboto", sans-serif;
   color: #222;
   display: block;
   min-height: 100vh;
@@ -46,7 +46,7 @@ body {
 }
 
 .form-container h1 {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 700;
   font-size: 2.25rem;
   color: #161111;
@@ -60,7 +60,7 @@ body {
 }
 
 .form-container h3 {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-size: 1.2rem;
   color: #161111;
   margin-top: 1.5rem;
@@ -85,7 +85,7 @@ body {
 }
 
 label {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 500;
   font-size: 1rem;
   color: #161111;
@@ -108,7 +108,7 @@ textarea {
   border-radius: 12px;
   background-color: #f4eff2;
   border: 1px solid #896070;
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-size: 1rem;
   color: #222;
   text-align: left;
@@ -155,7 +155,7 @@ input::-webkit-inner-spin-button {
   min-height: 48px;
   padding: 12px 30px;
   color: white;
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 700;
   font-size: 1rem;
   border: none;
@@ -183,7 +183,7 @@ input::-webkit-inner-spin-button {
   min-height: 48px;
   padding: 12px 30px;
   color: white;
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 700;
   font-size: 1rem;
   border: none;
@@ -201,6 +201,79 @@ input::-webkit-inner-spin-button {
   outline: none;
 }
 
+/* 履歴ページのヘッダーボタン用 */
+.history-header-button {
+  position: static;
+  display: inline-block;
+  width: auto;
+  min-width: 120px;
+  background-color: #ea115b;
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 10px 20px;
+  margin: 0 5px 5px 0;
+  color: white;
+  font-family: "Spline Sans", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(234, 17, 91, 0.3);
+  transform: none;
+}
+
+.history-header-button:hover,
+.history-header-button:focus {
+  background-color: #d60f4d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 17, 91, 0.4);
+  outline: none;
+}
+
+.history-header-button.danger {
+  background-color: #dc3545;
+}
+
+.history-header-button.danger:hover,
+.history-header-button.danger:focus {
+  background-color: #c82333;
+}
+
+/* 履歴アクションボタン用 */
+.history-action-button {
+  background-color: #ea115b;
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 10px 16px;
+  margin: 0;
+  color: white;
+  font-family: "Spline Sans", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(234, 17, 91, 0.3);
+  white-space: nowrap;
+}
+
+.history-action-button:hover,
+.history-action-button:focus {
+  background-color: #d60f4d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 17, 91, 0.4);
+  outline: none;
+}
+
+.history-action-button.danger {
+  background-color: #dc3545;
+}
+
+.history-action-button.danger:hover,
+.history-action-button.danger:focus {
+  background-color: #c82333;
+}
 
 .result-container {
   text-align: center;
@@ -226,7 +299,7 @@ input::-webkit-inner-spin-button {
 }
 
 .result-container h2 {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-size: 2rem;
   color: #2c3e50;
   margin-bottom: 1rem;
@@ -274,6 +347,17 @@ input::-webkit-inner-spin-button {
   text-shadow: 0 0 3px #dc3545;
 }
 
+/* 価格判定の色分け */
+.price-higher {
+  color: #dc3545;
+  font-weight: 700;
+}
+
+.price-lower {
+  color: #28a745;
+  font-weight: 700;
+}
+
 .important-message {
   font-weight: bold;
   font-size: 1.1em;
@@ -283,19 +367,36 @@ input::-webkit-inner-spin-button {
 
 /* 「現在の家賃は相場よりもかなり割安」を赤文字にするために、
    isReasonableがtrueの場合（okクラス）も赤色に変更 */
-.important-message.ok {
-  color: #dc3545; /* 赤色に変更 */
-  text-shadow: 0 0 5px #dc3545; /* 赤色の影 */
+/* 価格評価に応じた文字色 */
+.important-message.evaluation-cheaper {
+  color: #007bff; /* 割安: 青色 */
+  text-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
-.important-message.ng {
-  color: #dc3545;
-  text-shadow: 0 0 5px #dc3545;
+.important-message.evaluation-slightly-cheaper {
+  color: #17a2b8; /* 適正だが安い: 水色 */
+  text-shadow: 0 0 5px rgba(23, 162, 184, 0.5);
+}
+.important-message.evaluation-fair {
+  color: #2c3e50; /* 相場通り: 元々のh2の色 */
+}
+.important-message.evaluation-slightly-expensive {
+  color: #fd7e14; /* 適正だが高い: オレンジ色 */
+  text-shadow: 0 0 5px rgba(253, 126, 20, 0.5);
+}
+.important-message.evaluation-expensive {
+  color: #dc3545; /* 割高: 赤色 */
+  text-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
 }
 
 .result-divider {
   border: 0;
   height: 1px;
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0)
+  );
   margin: 20px auto;
   width: 80%;
 }
@@ -320,7 +421,9 @@ input::-webkit-inner-spin-button {
   label {
     font-size: 0.95rem;
   }
-  input, select, textarea {
+  input,
+  select,
+  textarea {
     padding: 6px 10px;
     min-height: 36px;
     font-size: 0.95rem;
@@ -332,7 +435,8 @@ input::-webkit-inner-spin-button {
     min-height: 44px;
     font-size: 0.95rem;
   }
-  .detail-toggle-button { /* Media Query for detail-toggle-button */
+  .detail-toggle-button {
+    /* Media Query for detail-toggle-button */
     width: 180px; /* モバイルでの幅調整 */
     padding: 10px 25px;
     min-height: 44px;
@@ -346,6 +450,129 @@ input::-webkit-inner-spin-button {
   }
   .important-message {
     font-size: 0.95rem;
+  }
+
+  /* 履歴ページのモバイル対応 */
+  .history-item {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .history-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .history-date {
+    font-size: 0.85rem;
+    width: 100%;
+  }
+
+  .history-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .history-actions .history-action-button {
+    width: 100%;
+    margin: 0;
+    padding: 12px 16px;
+    min-height: 48px;
+    font-size: 0.9rem;
+    border-radius: 12px;
+  }
+
+  .history-header-button {
+    min-width: 100px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    margin: 0 3px 3px 0;
+  }
+
+  .history-content {
+    gap: 0.75rem;
+  }
+
+  .history-result h3 {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  .history-result p {
+    font-size: 0.9rem;
+    margin: 0.3rem 0;
+  }
+
+  .history-details h4 {
+    font-size: 1rem;
+    margin: 0.5rem 0 0.4rem 0;
+  }
+
+  .detail-grid p {
+    font-size: 0.85rem;
+    margin: 0.2rem 0;
+    line-height: 1.4;
+  }
+
+  .confirm-dialog {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  .confirm-dialog p {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .confirm-dialog .history-header-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    min-height: 44px;
+    border-radius: 12px;
+    margin: 0 5px 0 0;
+  }
+
+  .confirm-dialog-overlay .confirm-dialog {
+    max-width: calc(100vw - 2rem);
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+  /* 履歴ページの中間サイズ画面対応 */
+  .history-actions {
+    flex-direction: row;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .history-actions .history-action-button {
+    flex: 1;
+    max-width: 180px;
+    padding: 12px 16px;
+    min-height: 48px;
+    font-size: 0.9rem;
+    border-radius: 12px;
+  }
+
+  .history-item {
+    padding: 1rem;
+  }
+
+  .history-content {
+    gap: 1rem;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 1rem;
+  }
+
+  .detail-grid p {
+    font-size: 0.9rem;
   }
 }
 
@@ -367,7 +594,9 @@ input::-webkit-inner-spin-button {
   label {
     font-size: 1.05rem;
   }
-  input, select, textarea {
+  input,
+  select,
+  textarea {
     padding: 10px 14px;
     min-height: 44px;
     font-size: 1.05rem;
@@ -379,7 +608,8 @@ input::-webkit-inner-spin-button {
     min-height: 52px;
     font-size: 1.1rem;
   }
-  .detail-toggle-button { /* Media Query for detail-toggle-button */
+  .detail-toggle-button {
+    /* Media Query for detail-toggle-button */
     width: 220px; /* デスクトップでの幅調整 */
     padding: 14px 40px;
     min-height: 52px;
@@ -393,6 +623,43 @@ input::-webkit-inner-spin-button {
   }
   .important-message {
     font-size: 1.2em;
+  }
+
+  /* 履歴ページのタブレット・デスクトップ対応 */
+  .history-actions {
+    gap: 0.75rem;
+  }
+
+  .history-actions .history-action-button {
+    min-width: 140px;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+
+  .history-content {
+    flex-direction: row;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
+  .history-result {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .history-details {
+    flex: 2;
+    min-width: 400px;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1.5rem;
+  }
+
+  .detail-grid p {
+    font-size: 0.95rem;
   }
 }
 
@@ -420,6 +687,7 @@ input::-webkit-inner-spin-button {
   font-size: 1rem;
   line-height: 1.6;
 }
+
 
 /* OCR Camera Modal Styles */
 .modal-overlay {
@@ -615,4 +883,101 @@ input::-webkit-inner-spin-button {
     padding: 10px 18px;
     font-size: 0.9rem;
   }
+
+/* 履歴表示用のスタイル */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.history-item {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.history-date {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.history-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.history-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.history-result h3 {
+  margin: 0.5rem 0;
+  text-align: center;
+}
+
+.history-details h4 {
+  margin: 0.5rem 0;
+  color: #495057;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 0.25rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+}
+
+.detail-grid p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+/* 確認ダイアログ */
+.confirm-dialog {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.confirm-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.confirm-dialog-overlay .confirm-dialog {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 400px;
+  margin: 0 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
 }
