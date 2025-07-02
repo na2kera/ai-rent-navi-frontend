@@ -4,7 +4,7 @@ body {
   /* background: url('/image_76b7cf.png') no-repeat center center fixed; */
   /* background-size: cover; */
   /* 上記の背景画像関連の行を削除しました */
-  font-family: 'Spline Sans', 'Noto Sans JP', 'Segoe UI', 'Roboto', sans-serif;
+  font-family: "Spline Sans", "Noto Sans JP", "Segoe UI", "Roboto", sans-serif;
   color: #222;
   display: block;
   min-height: 100vh;
@@ -46,7 +46,7 @@ body {
 }
 
 .form-container h1 {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 700;
   font-size: 2.25rem;
   color: #161111;
@@ -60,7 +60,7 @@ body {
 }
 
 .form-container h3 {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-size: 1.2rem;
   color: #161111;
   margin-top: 1.5rem;
@@ -85,7 +85,7 @@ body {
 }
 
 label {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 500;
   font-size: 1rem;
   color: #161111;
@@ -108,7 +108,7 @@ textarea {
   border-radius: 12px;
   background-color: #f4eff2;
   border: 1px solid #896070;
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-size: 1rem;
   color: #222;
   text-align: left;
@@ -155,7 +155,7 @@ input::-webkit-inner-spin-button {
   min-height: 48px;
   padding: 12px 30px;
   color: white;
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 700;
   font-size: 1rem;
   border: none;
@@ -183,7 +183,7 @@ input::-webkit-inner-spin-button {
   min-height: 48px;
   padding: 12px 30px;
   color: white;
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 700;
   font-size: 1rem;
   border: none;
@@ -200,7 +200,6 @@ input::-webkit-inner-spin-button {
   box-shadow: 0 6px 15px rgba(234, 17, 91, 0.5);
   outline: none;
 }
-
 
 .result-container {
   text-align: center;
@@ -226,7 +225,7 @@ input::-webkit-inner-spin-button {
 }
 
 .result-container h2 {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-size: 2rem;
   color: #2c3e50;
   margin-bottom: 1rem;
@@ -295,7 +294,12 @@ input::-webkit-inner-spin-button {
 .result-divider {
   border: 0;
   height: 1px;
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0)
+  );
   margin: 20px auto;
   width: 80%;
 }
@@ -320,7 +324,9 @@ input::-webkit-inner-spin-button {
   label {
     font-size: 0.95rem;
   }
-  input, select, textarea {
+  input,
+  select,
+  textarea {
     padding: 6px 10px;
     min-height: 36px;
     font-size: 0.95rem;
@@ -332,7 +338,8 @@ input::-webkit-inner-spin-button {
     min-height: 44px;
     font-size: 0.95rem;
   }
-  .detail-toggle-button { /* Media Query for detail-toggle-button */
+  .detail-toggle-button {
+    /* Media Query for detail-toggle-button */
     width: 180px; /* モバイルでの幅調整 */
     padding: 10px 25px;
     min-height: 44px;
@@ -367,7 +374,9 @@ input::-webkit-inner-spin-button {
   label {
     font-size: 1.05rem;
   }
-  input, select, textarea {
+  input,
+  select,
+  textarea {
     padding: 10px 14px;
     min-height: 44px;
     font-size: 1.05rem;
@@ -379,7 +388,8 @@ input::-webkit-inner-spin-button {
     min-height: 52px;
     font-size: 1.1rem;
   }
-  .detail-toggle-button { /* Media Query for detail-toggle-button */
+  .detail-toggle-button {
+    /* Media Query for detail-toggle-button */
     width: 220px; /* デスクトップでの幅調整 */
     padding: 14px 40px;
     min-height: 52px;
@@ -515,7 +525,7 @@ input::-webkit-inner-spin-button {
   padding: 12px 24px;
   border: none;
   border-radius: 24px;
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
@@ -565,7 +575,7 @@ input::-webkit-inner-spin-button {
   min-height: 48px;
   padding: 12px 20px;
   color: white;
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 600;
   font-size: 1rem;
   border: none;
@@ -592,15 +602,15 @@ input::-webkit-inner-spin-button {
     width: 95%;
     max-height: 95vh;
   }
-  
+
   .modal-header h2 {
     font-size: 1.3rem;
   }
-  
+
   .camera-controls {
     gap: 10px;
   }
-  
+
   .capture-button,
   .confirm-button,
   .retake-button,
@@ -609,7 +619,7 @@ input::-webkit-inner-spin-button {
     font-size: 0.9rem;
     min-width: 100px;
   }
-  
+
   .ocr-button {
     width: 180px;
     padding: 10px 18px;

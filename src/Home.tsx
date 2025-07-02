@@ -36,8 +36,18 @@ function Home() {
     const requiredFields = [
       { key: "postal_code", value: postal_code, type: "text", msg: "郵便番号" },
       { key: "address", value: address, type: "text", msg: "住所" },
-      { key: "nearest_station", value: nearest_station, type: "text", msg: "最寄り駅" },
-      { key: "distance_from_station", value: distance_from_station, type: "number", msg: "最寄駅からの分数" },
+      {
+        key: "nearest_station",
+        value: nearest_station,
+        type: "text",
+        msg: "最寄り駅",
+      },
+      {
+        key: "distance_from_station",
+        value: distance_from_station,
+        type: "number",
+        msg: "最寄駅からの分数",
+      },
       { key: "area", value: area, type: "number", msg: "面積" },
       { key: "age", value: age, type: "number", msg: "築年数" },
       { key: "structure", value: structure, type: "number", msg: "構造" },
@@ -58,7 +68,11 @@ function Home() {
         }
       }
       // 郵便番号のバリデーションを追加
-      if (key === "postal_code" && value.trim() !== "" && !/^\d{7}$/.test(value)) {
+      if (
+        key === "postal_code" &&
+        value.trim() !== "" &&
+        !/^\d{7}$/.test(value)
+      ) {
         newErrors[key] = "郵便番号は半角数字7桁で入力してください。";
       }
     });
@@ -134,33 +148,41 @@ function Home() {
   const handleOcrCapture = async (imageData: string) => {
     try {
       const extractedData = await extractRentalPropertyData(imageData);
-      
+
       // extracted dataをフォームに反映
       if (extractedData.postal_code) setPostalCode(extractedData.postal_code);
       if (extractedData.address) setAddress(extractedData.address);
-      if (extractedData.nearest_station) setNearestStation(extractedData.nearest_station);
-      if (extractedData.distance_from_station) setDistanceFromStation(extractedData.distance_from_station.toString());
+      if (extractedData.nearest_station)
+        setNearestStation(extractedData.nearest_station);
+      if (extractedData.distance_from_station)
+        setDistanceFromStation(extractedData.distance_from_station.toString());
       if (extractedData.area) setArea(extractedData.area.toString());
       if (extractedData.age) setAge(extractedData.age.toString());
-      if (extractedData.structure) setStructure(extractedData.structure.toString());
+      if (extractedData.structure)
+        setStructure(extractedData.structure.toString());
       if (extractedData.layout) setLayout(extractedData.layout.toString());
       if (extractedData.rent) setRent(extractedData.rent.toString());
-      if (extractedData.management_fee) setManagementFee(extractedData.management_fee.toString());
-      if (extractedData.total_units) setTotalUnits(extractedData.total_units.toString());
-      
+      if (extractedData.management_fee)
+        setManagementFee(extractedData.management_fee.toString());
+      if (extractedData.total_units)
+        setTotalUnits(extractedData.total_units.toString());
+
       // エラーをクリア
       setErrors({});
-      
     } catch (error) {
       console.error("OCR error:", error);
-      alert(error instanceof Error ? error.message : "OCR処理中にエラーが発生しました。");
+      alert(
+        error instanceof Error
+          ? error.message
+          : "OCR処理中にエラーが発生しました。"
+      );
     }
   };
 
   return (
     <div className="form-container">
       <h1>AI家賃ナビ</h1>
-      
+
       <button
         type="button"
         className="ocr-button"
@@ -366,7 +388,7 @@ function Home() {
           </button>
         </div>
       </form>
-      
+
       <OcrCameraModal
         isOpen={isOcrModalOpen}
         onClose={() => setIsOcrModalOpen(false)}
