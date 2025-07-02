@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import OcrCameraModal from "./OcrCameraModal";
+import { extractRentalPropertyData } from "./geminiService";
 
 function Home() {
   // 必須項目
@@ -18,6 +20,7 @@ function Home() {
   const [total_units, setTotalUnits] = useState(""); // 総戸数
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isOcrModalOpen, setIsOcrModalOpen] = useState(false);
   const navigate = useNavigate();
 
   // 半角数字のみ・整数かを判定
@@ -128,9 +131,43 @@ function Home() {
     });
   };
 
+  const handleOcrCapture = async (imageData: string) => {
+    try {
+      const extractedData = await extractRentalPropertyData(imageData);
+      
+      // extracted dataをフォームに反映
+      if (extractedData.postal_code) setPostalCode(extractedData.postal_code);
+      if (extractedData.address) setAddress(extractedData.address);
+      if (extractedData.nearest_station) setNearestStation(extractedData.nearest_station);
+      if (extractedData.distance_from_station) setDistanceFromStation(extractedData.distance_from_station.toString());
+      if (extractedData.area) setArea(extractedData.area.toString());
+      if (extractedData.age) setAge(extractedData.age.toString());
+      if (extractedData.structure) setStructure(extractedData.structure.toString());
+      if (extractedData.layout) setLayout(extractedData.layout.toString());
+      if (extractedData.rent) setRent(extractedData.rent.toString());
+      if (extractedData.management_fee) setManagementFee(extractedData.management_fee.toString());
+      if (extractedData.total_units) setTotalUnits(extractedData.total_units.toString());
+      
+      // エラーをクリア
+      setErrors({});
+      
+    } catch (error) {
+      console.error("OCR error:", error);
+      alert(error instanceof Error ? error.message : "OCR処理中にエラーが発生しました。");
+    }
+  };
+
   return (
     <div className="form-container">
       <h1>AI家賃ナビ</h1>
+      
+      <button
+        type="button"
+        className="ocr-button"
+        onClick={() => setIsOcrModalOpen(true)}
+      >
+        📷 OCR で読み取り
+      </button>
 
       <form onSubmit={handleSubmit}>
         {/* 必須項目: 郵便番号 */}
@@ -329,6 +366,12 @@ function Home() {
           </button>
         </div>
       </form>
+      
+      <OcrCameraModal
+        isOpen={isOcrModalOpen}
+        onClose={() => setIsOcrModalOpen(false)}
+        onCapture={handleOcrCapture}
+      />
     </div>
   );
 }
