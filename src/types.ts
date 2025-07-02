@@ -18,6 +18,7 @@ export interface PredictionResult {
   difference: number;
   is_reasonable: boolean;
   message: string;
+  price_evaluation: number; // 価格評価を追加
 }
 
 export interface HistoryItem {

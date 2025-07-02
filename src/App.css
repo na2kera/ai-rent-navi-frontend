@@ -347,6 +347,17 @@ input::-webkit-inner-spin-button {
   text-shadow: 0 0 3px #dc3545;
 }
 
+/* 価格判定の色分け */
+.price-higher {
+  color: #dc3545;
+  font-weight: 700;
+}
+
+.price-lower {
+  color: #28a745;
+  font-weight: 700;
+}
+
 .important-message {
   font-weight: bold;
   font-size: 1.1em;
@@ -356,13 +367,25 @@ input::-webkit-inner-spin-button {
 
 /* 「現在の家賃は相場よりもかなり割安」を赤文字にするために、
    isReasonableがtrueの場合（okクラス）も赤色に変更 */
-.important-message.ok {
-  color: #dc3545; /* 赤色に変更 */
-  text-shadow: 0 0 5px #dc3545; /* 赤色の影 */
+/* 価格評価に応じた文字色 */
+.important-message.evaluation-cheaper {
+  color: #007bff; /* 割安: 青色 */
+  text-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
-.important-message.ng {
-  color: #dc3545;
-  text-shadow: 0 0 5px #dc3545;
+.important-message.evaluation-slightly-cheaper {
+  color: #17a2b8; /* 適正だが安い: 水色 */
+  text-shadow: 0 0 5px rgba(23, 162, 184, 0.5);
+}
+.important-message.evaluation-fair {
+  color: #2c3e50; /* 相場通り: 元々のh2の色 */
+}
+.important-message.evaluation-slightly-expensive {
+  color: #fd7e14; /* 適正だが高い: オレンジ色 */
+  text-shadow: 0 0 5px rgba(253, 126, 20, 0.5);
+}
+.important-message.evaluation-expensive {
+  color: #dc3545; /* 割高: 赤色 */
+  text-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
 }
 
 .result-divider {
