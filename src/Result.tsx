@@ -82,6 +82,7 @@ function Result() {
         difference: data.difference,
         is_reasonable: data.is_reasonable,
         message: data.message,
+        price_evaluation: data.price_evaluation, // 評価を履歴に追加
       };
 
       saveHistoryItem(historyInput, historyResult);
@@ -97,6 +98,18 @@ function Result() {
     );
 
   // エラー発生時の表示
+  // 評価に応じてクラス名を返すヘルパー関数
+  const getEvaluationClass = (evaluation: number) => {
+    switch (evaluation) {
+      case 1: return 'evaluation-cheaper'; // 割安
+      case 2: return 'evaluation-slightly-cheaper'; // 適正だが安い
+      case 3: return 'evaluation-fair'; // 相場通り
+      case 4: return 'evaluation-slightly-expensive'; // 適正だが高い
+      case 5: return 'evaluation-expensive'; // 割高
+      default: return '';
+    }
+  };
+
   if (isError) {
     let errorMessage = "不明なエラーが発生しました。";
     if (error?.message) {
@@ -132,7 +145,6 @@ function Result() {
   // 予測結果の変数定義
   const predictedRent = data.predicted_rent;
   const difference = data.difference;
-  const isReasonable = data.is_reasonable; // important-message の色判定に使用
   const message = data.message;
   // const reasonableRange = data.reasonable_range; // 現在は使用されていません
 
@@ -155,7 +167,7 @@ function Result() {
       {/* 料金が適切かどうかを示す一番目立つメッセージ */}
       {/* isReasonable が true の場合も赤文字にするため、ok クラスを付与し、App.css で色を調整 */}
       <h2
-        className={`important-message ${isReasonable ? "ok" : "ng"}`}
+        className={`important-message ${getEvaluationClass(data.price_evaluation)}`}
         style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "1rem" }}
       >
         {message}
@@ -169,7 +181,9 @@ function Result() {
       <p>
         予測との差額: <span className="currency">¥</span>
         <span className="value">{Math.round(Math.abs(difference)).toLocaleString()}</span>{" "}
-        （{difference > 0 ? "予測より高い" : "予測より安い"}）
+        （<span className={difference > 0 ? "price-higher" : "price-lower"}>
+          {difference > 0 ? "予測より高い" : "予測より安い"}
+        </span>）
       </p>
 
       {/* 詳細トグルボタン */}
