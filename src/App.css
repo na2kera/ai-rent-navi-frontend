@@ -4,7 +4,7 @@ body {
   /* background: url('/image_76b7cf.png') no-repeat center center fixed; */
   /* background-size: cover; */
   /* 上記の背景画像関連の行を削除しました */
-  font-family: 'Spline Sans', 'Noto Sans JP', 'Segoe UI', 'Roboto', sans-serif;
+  font-family: "Spline Sans", "Noto Sans JP", "Segoe UI", "Roboto", sans-serif;
   color: #222;
   display: block;
   min-height: 100vh;
@@ -46,7 +46,7 @@ body {
 }
 
 .form-container h1 {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 700;
   font-size: 2.25rem;
   color: #161111;
@@ -60,7 +60,7 @@ body {
 }
 
 .form-container h3 {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-size: 1.2rem;
   color: #161111;
   margin-top: 1.5rem;
@@ -85,7 +85,7 @@ body {
 }
 
 label {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 500;
   font-size: 1rem;
   color: #161111;
@@ -108,7 +108,7 @@ textarea {
   border-radius: 12px;
   background-color: #f4eff2;
   border: 1px solid #896070;
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-size: 1rem;
   color: #222;
   text-align: left;
@@ -155,7 +155,7 @@ input::-webkit-inner-spin-button {
   min-height: 48px;
   padding: 12px 30px;
   color: white;
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 700;
   font-size: 1rem;
   border: none;
@@ -183,7 +183,7 @@ input::-webkit-inner-spin-button {
   min-height: 48px;
   padding: 12px 30px;
   color: white;
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-weight: 700;
   font-size: 1rem;
   border: none;
@@ -201,6 +201,79 @@ input::-webkit-inner-spin-button {
   outline: none;
 }
 
+/* 履歴ページのヘッダーボタン用 */
+.history-header-button {
+  position: static;
+  display: inline-block;
+  width: auto;
+  min-width: 120px;
+  background-color: #ea115b;
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 10px 20px;
+  margin: 0 5px 5px 0;
+  color: white;
+  font-family: "Spline Sans", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(234, 17, 91, 0.3);
+  transform: none;
+}
+
+.history-header-button:hover,
+.history-header-button:focus {
+  background-color: #d60f4d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 17, 91, 0.4);
+  outline: none;
+}
+
+.history-header-button.danger {
+  background-color: #dc3545;
+}
+
+.history-header-button.danger:hover,
+.history-header-button.danger:focus {
+  background-color: #c82333;
+}
+
+/* 履歴アクションボタン用 */
+.history-action-button {
+  background-color: #ea115b;
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 10px 16px;
+  margin: 0;
+  color: white;
+  font-family: "Spline Sans", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(234, 17, 91, 0.3);
+  white-space: nowrap;
+}
+
+.history-action-button:hover,
+.history-action-button:focus {
+  background-color: #d60f4d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(234, 17, 91, 0.4);
+  outline: none;
+}
+
+.history-action-button.danger {
+  background-color: #dc3545;
+}
+
+.history-action-button.danger:hover,
+.history-action-button.danger:focus {
+  background-color: #c82333;
+}
 
 .result-container {
   text-align: center;
@@ -226,7 +299,7 @@ input::-webkit-inner-spin-button {
 }
 
 .result-container h2 {
-  font-family: 'Spline Sans', sans-serif;
+  font-family: "Spline Sans", sans-serif;
   font-size: 2rem;
   color: #2c3e50;
   margin-bottom: 1rem;
@@ -295,7 +368,12 @@ input::-webkit-inner-spin-button {
 .result-divider {
   border: 0;
   height: 1px;
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0)
+  );
   margin: 20px auto;
   width: 80%;
 }
@@ -320,7 +398,9 @@ input::-webkit-inner-spin-button {
   label {
     font-size: 0.95rem;
   }
-  input, select, textarea {
+  input,
+  select,
+  textarea {
     padding: 6px 10px;
     min-height: 36px;
     font-size: 0.95rem;
@@ -332,7 +412,8 @@ input::-webkit-inner-spin-button {
     min-height: 44px;
     font-size: 0.95rem;
   }
-  .detail-toggle-button { /* Media Query for detail-toggle-button */
+  .detail-toggle-button {
+    /* Media Query for detail-toggle-button */
     width: 180px; /* モバイルでの幅調整 */
     padding: 10px 25px;
     min-height: 44px;
@@ -346,6 +427,129 @@ input::-webkit-inner-spin-button {
   }
   .important-message {
     font-size: 0.95rem;
+  }
+
+  /* 履歴ページのモバイル対応 */
+  .history-item {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .history-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .history-date {
+    font-size: 0.85rem;
+    width: 100%;
+  }
+
+  .history-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .history-actions .history-action-button {
+    width: 100%;
+    margin: 0;
+    padding: 12px 16px;
+    min-height: 48px;
+    font-size: 0.9rem;
+    border-radius: 12px;
+  }
+
+  .history-header-button {
+    min-width: 100px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    margin: 0 3px 3px 0;
+  }
+
+  .history-content {
+    gap: 0.75rem;
+  }
+
+  .history-result h3 {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  .history-result p {
+    font-size: 0.9rem;
+    margin: 0.3rem 0;
+  }
+
+  .history-details h4 {
+    font-size: 1rem;
+    margin: 0.5rem 0 0.4rem 0;
+  }
+
+  .detail-grid p {
+    font-size: 0.85rem;
+    margin: 0.2rem 0;
+    line-height: 1.4;
+  }
+
+  .confirm-dialog {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  .confirm-dialog p {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .confirm-dialog .history-header-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    min-height: 44px;
+    border-radius: 12px;
+    margin: 0 5px 0 0;
+  }
+
+  .confirm-dialog-overlay .confirm-dialog {
+    max-width: calc(100vw - 2rem);
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+  /* 履歴ページの中間サイズ画面対応 */
+  .history-actions {
+    flex-direction: row;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .history-actions .history-action-button {
+    flex: 1;
+    max-width: 180px;
+    padding: 12px 16px;
+    min-height: 48px;
+    font-size: 0.9rem;
+    border-radius: 12px;
+  }
+
+  .history-item {
+    padding: 1rem;
+  }
+
+  .history-content {
+    gap: 1rem;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 1rem;
+  }
+
+  .detail-grid p {
+    font-size: 0.9rem;
   }
 }
 
@@ -367,7 +571,9 @@ input::-webkit-inner-spin-button {
   label {
     font-size: 1.05rem;
   }
-  input, select, textarea {
+  input,
+  select,
+  textarea {
     padding: 10px 14px;
     min-height: 44px;
     font-size: 1.05rem;
@@ -379,7 +585,8 @@ input::-webkit-inner-spin-button {
     min-height: 52px;
     font-size: 1.1rem;
   }
-  .detail-toggle-button { /* Media Query for detail-toggle-button */
+  .detail-toggle-button {
+    /* Media Query for detail-toggle-button */
     width: 220px; /* デスクトップでの幅調整 */
     padding: 14px 40px;
     min-height: 52px;
@@ -393,6 +600,43 @@ input::-webkit-inner-spin-button {
   }
   .important-message {
     font-size: 1.2em;
+  }
+
+  /* 履歴ページのタブレット・デスクトップ対応 */
+  .history-actions {
+    gap: 0.75rem;
+  }
+
+  .history-actions .history-action-button {
+    min-width: 140px;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+
+  .history-content {
+    flex-direction: row;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
+  .history-result {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .history-details {
+    flex: 2;
+    min-width: 400px;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1.5rem;
+  }
+
+  .detail-grid p {
+    font-size: 0.95rem;
   }
 }
 
@@ -516,25 +760,4 @@ input::-webkit-inner-spin-button {
   max-width: 400px;
   margin: 0 1rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-/* タブレット以上の画面での履歴表示改善 */
-@media (min-width: 768px) {
-  .detail-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem 1rem;
-  }
-  
-  .history-content {
-    flex-direction: row;
-    gap: 2rem;
-  }
-  
-  .history-result {
-    flex: 1;
-  }
-  
-  .history-details {
-    flex: 2;
-  }
 }
