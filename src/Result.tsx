@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { postRentPrediction } from "./api";
@@ -87,7 +88,21 @@ function Result() {
 
       saveHistoryItem(historyInput, historyResult);
     }
-  }, [data, location.state, postal_code, address, nearest_station, distance_from_station, area, age, structure, layout, rent, management_fee, total_units]);
+  }, [
+    data,
+    location.state,
+    postal_code,
+    address,
+    nearest_station,
+    distance_from_station,
+    area,
+    age,
+    structure,
+    layout,
+    rent,
+    management_fee,
+    total_units,
+  ]);
 
   // ローディング中の表示
   if (isLoading)
@@ -101,12 +116,18 @@ function Result() {
   // 評価に応じてクラス名を返すヘルパー関数
   const getEvaluationClass = (evaluation: number) => {
     switch (evaluation) {
-      case 1: return 'evaluation-cheaper'; // 割安
-      case 2: return 'evaluation-slightly-cheaper'; // 適正だが安い
-      case 3: return 'evaluation-fair'; // 相場通り
-      case 4: return 'evaluation-slightly-expensive'; // 適正だが高い
-      case 5: return 'evaluation-expensive'; // 割高
-      default: return '';
+      case 1:
+        return "evaluation-cheaper"; // 割安
+      case 2:
+        return "evaluation-slightly-cheaper"; // 適正だが安い
+      case 3:
+        return "evaluation-fair"; // 相場通り
+      case 4:
+        return "evaluation-slightly-expensive"; // 適正だが高い
+      case 5:
+        return "evaluation-expensive"; // 割高
+      default:
+        return "";
     }
   };
 
@@ -115,7 +136,8 @@ function Result() {
     if (error?.message) {
       if (error.message.includes("422")) {
         // 422エラーは通常、入力データのバリデーション失敗を意味します
-        errorMessage = "入力データに問題があります。もう一度入力内容を確認してください。";
+        errorMessage =
+          "入力データに問題があります。もう一度入力内容を確認してください。";
       } else {
         errorMessage = `エラーが発生しました: ${error.message}`;
       }
@@ -150,15 +172,28 @@ function Result() {
 
   // 間取りの数値から文字列へのマッピング
   const layoutMap: { [key: number]: string } = {
-    1: "1K", 2: "1DK", 3: "1LDK", 4: "2K", 5: "2DK", 6: "2LDK",
-    7: "3K", 8: "3DK", 9: "3LDK", 10: "4K", 11: "4DK", 12: "4LDK以上",
+    1: "1K",
+    2: "1DK",
+    3: "1LDK",
+    4: "2K",
+    5: "2DK",
+    6: "2LDK",
+    7: "3K",
+    8: "3DK",
+    9: "3LDK",
+    10: "4K",
+    11: "4DK",
+    12: "4LDK以上",
   };
   const displayLayout = layoutMap[parseInt(layout)] || layout;
 
   // 構造の数値から文字列へのマッピング
   const structureMap: { [key: number]: string } = {
-    1: "木造", 2: "S造 (鉄骨造)", 3: "RC造 (鉄筋コンクリート造)",
-    4: "SRC造 (鉄骨鉄筋コンクリート造)", 5: "その他",
+    1: "木造",
+    2: "S造 (鉄骨造)",
+    3: "RC造 (鉄筋コンクリート造)",
+    4: "SRC造 (鉄骨鉄筋コンクリート造)",
+    5: "その他",
   };
   const displayStructure = structureMap[parseInt(structure)] || structure;
 
@@ -167,7 +202,9 @@ function Result() {
       {/* 料金が適切かどうかを示す一番目立つメッセージ */}
       {/* isReasonable が true の場合も赤文字にするため、ok クラスを付与し、App.css で色を調整 */}
       <h2
-        className={`important-message ${getEvaluationClass(data.price_evaluation)}`}
+        className={`important-message ${getEvaluationClass(
+          data.price_evaluation
+        )}`}
         style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "1rem" }}
       >
         {message}
@@ -176,14 +213,20 @@ function Result() {
       {/* 簡潔な結果表示 */}
       <p>
         だいたいの予測家賃: <span className="currency">¥</span>
-        <span className="value">{Math.round(predictedRent).toLocaleString()}</span>
+        <span className="value">
+          {Math.round(predictedRent).toLocaleString()}
+        </span>
       </p>
       <p>
         予測との差額: <span className="currency">¥</span>
-        <span className="value">{Math.round(Math.abs(difference)).toLocaleString()}</span>{" "}
-        （<span className={difference > 0 ? "price-higher" : "price-lower"}>
+        <span className="value">
+          {Math.round(Math.abs(difference)).toLocaleString()}
+        </span>{" "}
+        （
+        <span className={difference > 0 ? "price-higher" : "price-lower"}>
           {difference > 0 ? "予測より高い" : "予測より安い"}
-        </span>）
+        </span>
+        ）
       </p>
 
       {/* 詳細トグルボタン */}
@@ -196,65 +239,84 @@ function Result() {
 
       {/* 詳細情報（トグル表示） */}
       {showDetails && (
-        <div className="detail-section"> {/* detail-section クラスを適用 */}
+        <div className="detail-section">
+          {" "}
+          {/* detail-section クラスを適用 */}
           <hr className="result-divider" /> {/* 区切り線 */}
           <h3>入力情報の詳細</h3> {/* 詳細情報のタイトル */}
           <p>
-            <strong>郵便番号:</strong> <span className="value">{postal_code || "N/A"}</span>
+            <strong>郵便番号:</strong>{" "}
+            <span className="value">{postal_code || "N/A"}</span>
           </p>
           <p>
-            <strong>住所:</strong> <span className="value">{address || "N/A"}</span>
+            <strong>住所:</strong>{" "}
+            <span className="value">{address || "N/A"}</span>
           </p>
           <p>
-            <strong>最寄り駅:</strong> <span className="value">{nearest_station || "N/A"}</span>
+            <strong>最寄り駅:</strong>{" "}
+            <span className="value">{nearest_station || "N/A"}</span>
           </p>
           <p>
-            <strong>最寄駅からの分数:</strong> <span className="value">{distance_from_station || "N/A"}</span> 分
+            <strong>最寄駅からの分数:</strong>{" "}
+            <span className="value">{distance_from_station || "N/A"}</span> 分
           </p>
           <p>
-            <strong>面積:</strong> <span className="value">{area || "N/A"}</span> ㎡
+            <strong>面積:</strong>{" "}
+            <span className="value">{area || "N/A"}</span> ㎡
           </p>
           <p>
-            <strong>築年数:</strong> <span className="value">{age || "N/A"}</span> 年
+            <strong>築年数:</strong>{" "}
+            <span className="value">{age || "N/A"}</span> 年
           </p>
           <p>
-            <strong>構造:</strong> <span className="value">{displayStructure || "N/A"}</span>
+            <strong>構造:</strong>{" "}
+            <span className="value">{displayStructure || "N/A"}</span>
           </p>
           <p>
-            <strong>間取り:</strong> <span className="value">{displayLayout || "N/A"}</span>
+            <strong>間取り:</strong>{" "}
+            <span className="value">{displayLayout || "N/A"}</span>
           </p>
           <p>
             <strong>現在の家賃:</strong> <span className="currency">¥</span>
-            <span className="value">{(parseFloat(rent) || 0).toLocaleString()}</span>
+            <span className="value">
+              {(parseFloat(rent) || 0).toLocaleString()}
+            </span>
           </p>
-
           {/* 各種オプション情報の表示 (値が存在する場合のみ) */}
           {management_fee && (
             <p>
               <strong>管理費:</strong> <span className="currency">¥</span>
-              <span className="value">{(parseFloat(management_fee) || 0).toLocaleString()}</span>
+              <span className="value">
+                {(parseFloat(management_fee) || 0).toLocaleString()}
+              </span>
             </p>
           )}
           {total_units && (
             <p>
-              <strong>総戸数:</strong> <span className="value">{total_units}</span> 戸
+              <strong>総戸数:</strong>{" "}
+              <span className="value">{total_units}</span> 戸
             </p>
           )}
           {parking_spaces && ( // 追加: 駐車場数
             <p>
-              <strong>駐車場数:</strong> <span className="value">{parking_spaces}</span>
+              <strong>駐車場数:</strong>{" "}
+              <span className="value">{parking_spaces}</span>
             </p>
           )}
           {deposit && ( // 追加: 敷金
             <p>
               <strong>敷金:</strong> <span className="currency">¥</span>
-              <span className="value">{(parseFloat(deposit) || 0).toLocaleString()}</span>
+              <span className="value">
+                {(parseFloat(deposit) || 0).toLocaleString()}
+              </span>
             </p>
           )}
           {key_money && ( // 追加: 礼金
             <p>
               <strong>礼金:</strong> <span className="currency">¥</span>
-              <span className="value">{(parseFloat(key_money) || 0).toLocaleString()}</span>
+              <span className="value">
+                {(parseFloat(key_money) || 0).toLocaleString()}
+              </span>
             </p>
           )}
           {conditions && ( // 追加: 条件
@@ -266,17 +328,30 @@ function Result() {
       )}
 
       {/* ナビゲーションボタンエリア */}
-      <div style={{ textAlign: "center", marginTop: "2rem", marginBottom: "1rem", display: "flex", flexDirection: "column", gap: "10px", alignItems: "center" }}>
-        <button 
-          onClick={() => navigate("/history")} 
+      <div
+        style={{
+          textAlign: "center",
+          marginTop: "2rem",
+          marginBottom: "1rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+          alignItems: "center",
+        }}
+      >
+        <button
+          onClick={() => navigate("/history")}
           className="detail-toggle-button"
           style={{ width: "200px", position: "static", transform: "none" }}
         >
           判定履歴を見る
         </button>
-        
+
         {/* 「再判定する」ボタンは画面下部に固定 */}
-        <button onClick={() => navigate("/", { state: location.state })} className="submit-button">
+        <button
+          onClick={() => navigate("/", { state: location.state })}
+          className="submit-button"
+        >
           再判定する
         </button>
       </div>
