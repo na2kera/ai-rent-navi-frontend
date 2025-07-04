@@ -1,6 +1,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 interface RentalPropertyData {
+  prefecture?: string; // ←追加
+  city?: string;   
   postal_code?: string;
   address?: string;
   nearest_station?: string;
