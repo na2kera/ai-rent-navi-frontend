@@ -1,11 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  /* background: url('/image_76b7cf.png') no-repeat center center fixed; */
-  /* background-size: cover; */
-  /* 上記の背景画像関連の行を削除しました */
   font-family: "Spline Sans", "Noto Sans JP", "Segoe UI", "Roboto", sans-serif;
-
   color: #222;
   display: block;
   min-height: 100vh;
@@ -19,32 +15,14 @@ body {
 .form-container {
   width: 100%;
   max-width: 98%;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: transparent;
   padding: 30px 20px 15px;
   border-radius: 20px;
   text-align: left;
   color: #222;
-  /* 下部の submit-button の領域を考慮して高さを調整 */
-  max-height: calc(100vh - (20px + 90px + 20px));
-  overflow-y: auto;
-  box-sizing: border-box;
   margin: 0 auto 20px;
 }
 
-.form-container::-webkit-scrollbar {
-  width: 8px;
-}
-.form-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-.form-container::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-.form-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
 
 .form-container h1 {
   font-family: "Spline Sans", sans-serif;
@@ -107,7 +85,7 @@ textarea {
   padding: 8px 12px;
   min-height: 40px;
   border-radius: 12px;
-  background-color: #f4eff2;
+  background-color: transparent;
   border: 1px solid #896070;
   font-family: "Spline Sans", sans-serif;
   font-size: 1rem;
@@ -431,6 +409,10 @@ input::-webkit-inner-spin-button {
     font-size: 0.95rem;
     width: 94% !important;
   }
+
+  .error-message {
+    font-size: 0.95rem; /* モバイルでの入力項目と同じサイズに設定 */
+  }
   .submit-button {
     width: calc(100% - 20px);
     padding: 10px 25px;
@@ -604,6 +586,10 @@ input::-webkit-inner-spin-button {
     font-size: 1.05rem;
     width: 96% !important;
   }
+
+  .error-message {
+    font-size: 1.05rem; /* PCでの入力項目と同じサイズに設定 */
+  }
   .submit-button {
     width: calc(100% - 80px);
     padding: 14px 40px;
@@ -667,18 +653,16 @@ input::-webkit-inner-spin-button {
 
 .error-message {
   color: #dc3545;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
   margin-top: 0.3rem;
   text-align: left;
-  width: 95%;
-  max-width: 320px;
-  margin-left: auto;
-  margin-right: auto;
   background-color: rgba(255, 230, 230, 0.4);
   padding: 4px 8px;
   border-left: 4px solid #dc3545;
   border-radius: 4px;
+  display: inline-block; /* 追加 */
+  box-sizing: border-box; /* 追加 */
 }
 
 /* 詳細情報を黒文字で明示的に表示 */
@@ -981,4 +965,9 @@ input::-webkit-inner-spin-button {
     margin: 0 1rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   }
+}
+
+.required-asterisk {
+  color: #dc3545; 
+  margin-left: 4px;
 }

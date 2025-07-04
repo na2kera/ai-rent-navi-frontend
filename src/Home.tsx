@@ -8,10 +8,10 @@ function Home() {
   const navigate = useNavigate();
 
   // 必須項目 - location.stateから初期値を設定
-  const [postal_code, setPostalCode] = useState(
-    location.state?.postal_code || ""
-  ); // 郵便番号
-  const [address, setAddress] = useState(location.state?.address || ""); // 住所
+  const [prefecture, setPrefecture] = useState(
+    location.state?.prefecture || ""
+  ); // 都道府県
+  const [city, setCity] = useState(location.state?.city || ""); // 市区町村
   const [nearest_station, setNearestStation] = useState(
     location.state?.nearest_station || ""
   ); // 最寄り駅
@@ -45,36 +45,37 @@ function Home() {
   // 空白が含まれているかチェック
   const hasWhitespace = (value: string) => /\s/.test(value);
 
-  const validate = () => {
-    const newErrors: { [key: string]: string } = {};
+  const validate = (fieldKey?: string, fieldValue?: string) => {
+    const newErrors: { [key: string]: string } = { ...errors }; // 現在のエラーをコピー
 
     // 必須項目に対するバリデーション (指定された順序に並べ替え)
     const requiredFields = [
-      { key: "postal_code", value: postal_code, type: "text", msg: "郵便番号" },
-      { key: "address", value: address, type: "text", msg: "住所" },
-
+      { key: "prefecture", value: fieldValue !== undefined && fieldKey === "prefecture" ? fieldValue : prefecture, type: "text", msg: "都道府県" },
+      { key: "city", value: fieldValue !== undefined && fieldKey === "city" ? fieldValue : city, type: "text", msg: "市区町村" },
       {
         key: "nearest_station",
-        value: nearest_station,
+        value: fieldValue !== undefined && fieldKey === "nearest_station" ? fieldValue : nearest_station,
         type: "text",
         msg: "最寄り駅",
       },
       {
         key: "distance_from_station",
-        value: distance_from_station,
+        value: fieldValue !== undefined && fieldKey === "distance_from_station" ? fieldValue : distance_from_station,
         type: "number",
         msg: "最寄駅からの分数",
       },
-      { key: "area", value: area, type: "number", msg: "面積" },
-      { key: "age", value: age, type: "number", msg: "築年数" },
-      { key: "structure", value: structure, type: "number", msg: "構造" },
-      { key: "layout", value: layout, type: "number", msg: "間取り" },
-      { key: "rent", value: rent, type: "number", msg: "家賃価格" },
+      { key: "area", value: fieldValue !== undefined && fieldKey === "area" ? fieldValue : area, type: "number", msg: "面積" },
+      { key: "age", value: fieldValue !== undefined && fieldKey === "age" ? fieldValue : age, type: "number", msg: "築年数" },
+      { key: "structure", value: fieldValue !== undefined && fieldKey === "structure" ? fieldValue : structure, type: "number", msg: "構造" },
+      { key: "layout", value: fieldValue !== undefined && fieldKey === "layout" ? fieldValue : layout, type: "number", msg: "間取り" },
+      { key: "rent", value: fieldValue !== undefined && fieldKey === "rent" ? fieldValue : rent, type: "number", msg: "家賃価格" },
     ];
 
-    requiredFields.forEach(({ key, value, type, msg }) => {
+    const fieldsToValidate = fieldKey ? requiredFields.filter(f => f.key === fieldKey) : requiredFields;
+
+    fieldsToValidate.forEach(({ key, value, type }) => {
       if (value.trim() === "") {
-        newErrors[key] = `${msg}は必須項目です。`;
+        newErrors[key] = `必須項目です。`;
       } else if (hasWhitespace(value)) {
         newErrors[key] = "空白文字が含まれています。削除してください。";
       } else if (type === "number") {
@@ -82,43 +83,54 @@ function Home() {
           newErrors[key] = "半角数字のみ入力してください。(小数不可)";
         } else if (Number(value) < 0) {
           newErrors[key] = "0以上を入力してください。";
+        } else {
+          delete newErrors[key]; // エラーが解消されたら削除
         }
-      }
-      // 郵便番号のバリデーションを追加
-      if (
-        key === "postal_code" &&
-        value.trim() !== "" &&
-        !/^\d{7}$/.test(value)
-      ) {
-        newErrors[key] = "郵便番号は半角数字7桁で入力してください。";
+      } else {
+        delete newErrors[key]; // エラーが解消されたら削除
       }
     });
 
     // 特定の項目の追加バリデーション
-    if (layout !== "" && (Number(layout) < 1 || Number(layout) > 12)) {
-      newErrors.layout = "間取りは1から12までの数値を入力してください。";
+    if (fieldKey === "layout" || fieldKey === undefined) {
+      if (layout !== "" && (Number(layout) < 1 || Number(layout) > 12)) {
+        newErrors.layout = "間取りは1から12までの数値を入力してください。";
+      } else if (fieldKey === "layout" && layout.trim() !== "" && !newErrors.layout) {
+        delete newErrors.layout;
+      }
     }
-    if (structure !== "" && (Number(structure) < 1 || Number(structure) > 5)) {
-      // 例: 1:木造, 2:S, 3:RC, 4:SRC, 5:その他
-      newErrors.structure = "構造は1から5までの数値を入力してください。"; // バックエンドの定義に合わせる
+    if (fieldKey === "structure" || fieldKey === undefined) {
+      if (structure !== "" && (Number(structure) < 1 || Number(structure) > 5)) {
+        // 例: 1:木造, 2:S, 3:RC, 4:SRC, 5:その他
+        newErrors.structure = "構造は1から5までの数値を入力してください。"; // バックエンドの定義に合わせる
+      } else if (fieldKey === "structure" && structure.trim() !== "" && !newErrors.structure) {
+        delete newErrors.structure;
+      }
     }
 
     // オプション項目に対する数字バリデーション (入力があれば数値チェック)
     const optionalNumberFields = [
-      { key: "management_fee", value: management_fee, msg: "管理費" },
-      { key: "total_units", value: total_units, msg: "総戸数" },
+      { key: "management_fee", value: fieldValue !== undefined && fieldKey === "management_fee" ? fieldValue : management_fee, msg: "管理費" },
+      { key: "total_units", value: fieldValue !== undefined && fieldKey === "total_units" ? fieldValue : total_units, msg: "総戸数" },
     ];
 
-    optionalNumberFields.forEach(({ key, value, msg }) => {
+    const optionalFieldsToValidate = fieldKey ? optionalNumberFields.filter(f => f.key === fieldKey) : optionalNumberFields;
+
+
+    optionalFieldsToValidate.forEach(({ key, value }) => {
       if (value !== "") {
         // 値が入力されている場合のみチェック
         if (hasWhitespace(value)) {
           newErrors[key] = "空白文字が含まれています。削除してください。";
         } else if (!isValidInteger(value)) {
-          newErrors[key] = `${msg}は半角数字のみ入力してください。(小数不可)`;
+          newErrors[key] = `半角数字のみ入力してください。(小数不可)`;
         } else if (Number(value) < 0) {
-          newErrors[key] = `${msg}は0以上を入力してください。`;
+          newErrors[key] = `0以上を入力してください。`;
+        } else {
+          delete newErrors[key]; // エラーが解消されたら削除
         }
+      } else {
+        delete newErrors[key]; // 空文字ならエラーなし
       }
     });
 
@@ -133,20 +145,22 @@ function Home() {
         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
       >
     ) => {
-      setter(e.target.value);
-      setErrors((prev) => ({ ...prev, [key]: "" }));
+      const newValue = e.target.value;
+      setter(newValue);
+      // 入力と同時にバリデーションを実行
+      validate(key, newValue);
     };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate()) return; // 最終チェック
 
     // 数値項目をnumber型に変換（オプション項目は空文字の場合undefinedにする）
     // こちらも指定された順序に並べ替え
     navigate("/result", {
       state: {
-        postal_code: postal_code,
-        address: address,
+        prefecture: prefecture,
+        city: city,
         nearest_station: nearest_station,
         distance_from_station: parseInt(distance_from_station),
         area: parseFloat(area),
@@ -167,8 +181,8 @@ function Home() {
       const extractedData = await extractRentalPropertyData(imageData);
 
       // extracted dataをフォームに反映
-      if (extractedData.postal_code) setPostalCode(extractedData.postal_code);
-      if (extractedData.address) setAddress(extractedData.address);
+      if (extractedData.prefecture) setPrefecture(extractedData.prefecture);
+      if (extractedData.city) setCity(extractedData.city);
       if (extractedData.nearest_station)
         setNearestStation(extractedData.nearest_station);
       if (extractedData.distance_from_station)
@@ -184,8 +198,8 @@ function Home() {
       if (extractedData.total_units)
         setTotalUnits(extractedData.total_units.toString());
 
-      // エラーをクリア
-      setErrors({});
+      // OCRで入力された場合もバリデーションを実行
+      validate();
     } catch (error) {
       console.error("OCR error:", error);
       alert(
@@ -197,8 +211,8 @@ function Home() {
   };
 
   const handleReset = () => {
-    setPostalCode("");
-    setAddress("");
+    setPrefecture("");
+    setCity("");
     setNearestStation("");
     setDistanceFromStation("");
     setArea("");
@@ -265,56 +279,65 @@ function Home() {
           リセット
         </button>
 
-        {/* 必須項目: 郵便番号 */}
+        <p className="required-message">
+          <span className="required-asterisk">*</span>は必須項目です。
+        </p>
+
+        {/* 必須項目: 都道府県 */}
         <div className="form-row">
           <div className="form-group">
-            <label>郵便番号 (ハイフンなし)</label>
+            <label>
+              都道府県<span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
-              value={postal_code}
-              onChange={handleChange(setPostalCode, "postal_code")}
-              placeholder="例: 1234567 (半角数字7桁)"
+              value={prefecture}
+              onChange={handleChange(setPrefecture, "prefecture")}
+              placeholder="例: 東京都"
               required
-              maxLength={7} // 7桁に制限
             />
-            {errors.postal_code && (
-              <p className="error-message">{errors.postal_code}</p>
+            {errors.prefecture && (
+              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.prefecture}</p>
             )}
           </div>
-          {/* 必須項目: 住所 */}
+          {/* 必須項目: 市区町村 */}
           <div className="form-group">
-            <label>住所 (市区町村名)</label>
+            <label>
+              市区町村<span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
-              value={address}
-              onChange={handleChange(setAddress, "address")}
-              placeholder="例: 杉並区荻窪1-2-3-101"
+              value={city}
+              onChange={handleChange(setCity, "city")}
+              placeholder="例: 杉並区"
               required
             />
-            {errors.address && (
-              <p className="error-message">{errors.address}</p>
-            )}
+            {errors.city && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.city}</p>}
           </div>
         </div>
 
         <div className="form-row">
           {/* 必須項目: 最寄り駅 */}
           <div className="form-group">
-            <label>最寄り駅 (駅名)</label>
+            <label>
+              最寄り駅 (駅名)<span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
               value={nearest_station}
               onChange={handleChange(setNearestStation, "nearest_station")}
-              placeholder="例: 荻窪"
+              placeholder="例: 荻窪 (“駅”はつけない )"
               required
             />
             {errors.nearest_station && (
-              <p className="error-message">{errors.nearest_station}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.nearest_station}</p>
             )}
           </div>
           {/* 必須項目: 最寄駅からの分数 */}
           <div className="form-group">
-            <label>最寄駅からの分数</label>
+            <label>
+              最寄駅からの分数<span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
               value={distance_from_station}
@@ -326,7 +349,7 @@ function Home() {
               required
             />
             {errors.distance_from_station && (
-              <p className="error-message">{errors.distance_from_station}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.distance_from_station}</p>
             )}
           </div>
         </div>
@@ -334,7 +357,9 @@ function Home() {
         <div className="form-row">
           {/* 必須項目: 面積 */}
           <div className="form-group">
-            <label>面積 (㎡)</label>
+            <label>
+              面積 (㎡)<span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
               value={area}
@@ -342,11 +367,13 @@ function Home() {
               placeholder="例: 40 (半角数字のみ)"
               required
             />
-            {errors.area && <p className="error-message">{errors.area}</p>}
+            {errors.area && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.area}</p>}
           </div>
           {/* 必須項目: 築年数 */}
           <div className="form-group">
-            <label>築年数</label>
+            <label>
+              築年数<span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
               value={age}
@@ -354,14 +381,16 @@ function Home() {
               placeholder="例: 20 (半角数字のみ)"
               required
             />
-            {errors.age && <p className="error-message">{errors.age}</p>}
+            {errors.age && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.age}</p>}
           </div>
         </div>
 
         <div className="form-row">
           {/* 必須項目: 構造 */}
           <div className="form-group">
-            <label>構造</label>
+            <label>
+              構造<span className="required-asterisk">*</span>
+            </label>
             <select
               value={structure}
               onChange={handleChange(setStructure, "structure")}
@@ -375,12 +404,14 @@ function Home() {
               <option value="5">その他</option>
             </select>
             {errors.structure && (
-              <p className="error-message">{errors.structure}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.structure}</p>
             )}
           </div>
           {/* 必須項目: 間取り */}
           <div className="form-group">
-            <label>間取り</label>
+            <label>
+              間取り<span className="required-asterisk">*</span>
+            </label>
             <select
               value={layout}
               onChange={handleChange(setLayout, "layout")}
@@ -400,14 +431,16 @@ function Home() {
               <option value="11">4DK</option>
               <option value="12">4LDK以上</option>
             </select>
-            {errors.layout && <p className="error-message">{errors.layout}</p>}
+            {errors.layout && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.layout}</p>}
           </div>
         </div>
 
         <div className="form-row">
           {/* 必須項目: 家賃価格 */}
           <div className="form-group">
-            <label>家賃価格 (円)</label>
+            <label>
+              家賃価格 (円)<span className="required-asterisk">*</span>
+            </label>
             <input
               type="text"
               value={rent}
@@ -415,7 +448,7 @@ function Home() {
               placeholder="例: 60000 (半角数字のみ)"
               required
             />
-            {errors.rent && <p className="error-message">{errors.rent}</p>}
+            {errors.rent && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.rent}</p>}
           </div>
           {/* レイアウトを維持するための空のdiv */}
           <div className="form-group"></div>
@@ -437,7 +470,7 @@ function Home() {
               placeholder="例: 5000 (半角数字のみ)"
             />
             {errors.management_fee && (
-              <p className="error-message">{errors.management_fee}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.management_fee}</p>
             )}
           </div>
 
@@ -450,7 +483,7 @@ function Home() {
               placeholder="例: 30 (半角数字のみ)"
             />
             {errors.total_units && (
-              <p className="error-message">{errors.total_units}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.total_units}</p>
             )}
           </div>
         </div>
