@@ -7,15 +7,25 @@ function Home() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const REGION_MAPPING: { [key: string]: string } = {
+      "杉並区": "suginami",
+      "武蔵野市": "musashino",
+      "北区": "kitaku",
+      "中野区": "nakanoku",
+      "練馬区": "nerimaku",
+      // config.json に他の地域を追加した場合、ここにも同様に追加
+  };
+
+
   // 必須項目 - location.stateから初期値を設定
   const [prefecture, setPrefecture] = useState(
     location.state?.prefecture || ""
   ); // 都道府県
-  const [city, setCity] = useState(location.state?.city || ""); // 市区町村
+  const [region, setCity] = useState(location.state?.city || ""); // 市区町村
   const [nearest_station, setNearestStation] = useState(
     location.state?.nearest_station || ""
   ); // 最寄り駅
-  const [distance_from_station, setDistanceFromStation] = useState(
+  const [station_distance, setDistanceFromStation] = useState(
     location.state?.distance_from_station?.toString() || ""
   ); // 最寄駅からの分数
   const [area, setArea] = useState(location.state?.area?.toString() || ""); // 面積
@@ -29,10 +39,10 @@ function Home() {
   const [rent, setRent] = useState(location.state?.rent?.toString() || ""); // 家賃価格
 
   // オプション項目 - location.stateから初期値を設定
-  const [management_fee, setManagementFee] = useState(
+  const [kanrihi, setManagementFee] = useState(
     location.state?.management_fee?.toString() || ""
   ); // 管理費
-  const [total_units, setTotalUnits] = useState(
+  const [soukosuu, setTotalUnits] = useState(
     location.state?.total_units?.toString() || ""
   ); // 総戸数
 
@@ -55,7 +65,7 @@ function Home() {
     // 必須項目に対するバリデーション (指定された順序に並べ替え)
     const requiredFields = [
       { key: "prefecture", value: fieldValue !== undefined && fieldKey === "prefecture" ? fieldValue : prefecture, type: "text", msg: "都道府県" },
-      { key: "city", value: fieldValue !== undefined && fieldKey === "city" ? fieldValue : city, type: "text", msg: "市区町村" },
+      { key: "city", value: fieldValue !== undefined && fieldKey === "city" ? fieldValue : region, type: "text", msg: "市区町村" },
       {
         key: "nearest_station",
         value: fieldValue !== undefined && fieldKey === "nearest_station" ? fieldValue : nearest_station,
@@ -64,7 +74,7 @@ function Home() {
       },
       {
         key: "distance_from_station",
-        value: fieldValue !== undefined && fieldKey === "distance_from_station" ? fieldValue : distance_from_station,
+        value: fieldValue !== undefined && fieldKey === "distance_from_station" ? fieldValue : station_distance,
         type: "number",
         msg: "最寄駅からの分数",
       },
@@ -119,8 +129,8 @@ function Home() {
 
     // オプション項目に対する数字バリデーション (入力があれば数値チェック)
     const optionalNumberFields = [
-      { key: "management_fee", value: fieldValue !== undefined && fieldKey === "management_fee" ? fieldValue : management_fee, msg: "管理費" },
-      { key: "total_units", value: fieldValue !== undefined && fieldKey === "total_units" ? fieldValue : total_units, msg: "総戸数" },
+      { key: "management_fee", value: fieldValue !== undefined && fieldKey === "management_fee" ? fieldValue : kanrihi, msg: "管理費" },
+      { key: "total_units", value: fieldValue !== undefined && fieldKey === "total_units" ? fieldValue : soukosuu, msg: "総戸数" },
     ];
 
     const optionalFieldsToValidate = fieldKey ? optionalNumberFields.filter(f => f.key === fieldKey) : optionalNumberFields;
@@ -250,14 +260,20 @@ if (addressData.addresses?.length > 0) {
     e.preventDefault();
     if (!validate()) return; // 最終チェック
 
+    const backendRegionKey = REGION_MAPPING[region];
+    if (!backendRegionKey) {
+    alert(`対応する地域が見つかりません: "${region}"。入力を見直してください。\n利用可能な地域: ${Object.keys(REGION_MAPPING).join(', ')}`);
+    return; // 処理を中断します
+  }
+
     // 数値項目をnumber型に変換（オプション項目は空文字の場合undefinedにする）
     // こちらも指定された順序に並べ替え
     navigate("/result", {
       state: {
         prefecture: prefecture,
-        city: city,
+        city: backendRegionKey,
         nearest_station: nearest_station,
-        distance_from_station: parseInt(distance_from_station),
+        distance_from_station: parseInt(station_distance),
         area: parseFloat(area),
         age: parseInt(age),
         structure: parseInt(structure),
@@ -265,8 +281,8 @@ if (addressData.addresses?.length > 0) {
         rent: parseFloat(rent),
 
         management_fee:
-          management_fee === "" ? undefined : parseFloat(management_fee),
-        total_units: total_units === "" ? undefined : parseInt(total_units),
+          kanrihi === "" ? undefined : parseFloat(kanrihi),
+        total_units: soukosuu === "" ? undefined : parseInt(soukosuu),
       },
     });
   };
@@ -454,7 +470,7 @@ if (addressData.addresses?.length > 0) {
             </label>
             <input
               type="text"
-              value={city}
+              value={region}
               onChange={handleChange(setCity, "city")}
               placeholder="例: 杉並区"
               required
@@ -487,7 +503,7 @@ if (addressData.addresses?.length > 0) {
             </label>
             <input
               type="text"
-              value={distance_from_station}
+              value={station_distance}
               onChange={handleChange(
                 setDistanceFromStation,
                 "distance_from_station"
@@ -612,7 +628,7 @@ if (addressData.addresses?.length > 0) {
             <label>管理費 (円)</label>
             <input
               type="text"
-              value={management_fee}
+              value={kanrihi}
               onChange={handleChange(setManagementFee, "management_fee")}
               placeholder="例: 5000 (半角数字のみ)"
             />
@@ -625,7 +641,7 @@ if (addressData.addresses?.length > 0) {
             <label>総戸数 (マンションの場合)</label>
             <input
               type="text"
-              value={total_units}
+              value={soukosuu}
               onChange={handleChange(setTotalUnits, "total_units")}
               placeholder="例: 30 (半角数字のみ)"
             />

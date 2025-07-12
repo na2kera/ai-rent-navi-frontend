@@ -9,6 +9,7 @@ export interface RentPredictionRequest {
   layout: number;
   station_person: number;
   rent: number; // 万円単位で送信されることを想定
+  region: string;
 }
 
 export interface RentPredictionResponseFromBackend {
@@ -41,6 +42,7 @@ export const postRentPrediction = async (data: {
   layout: number;
   distance_from_station: number; // この値はここでは使用しない（ダミー値を使用するため）
   rent: number; // 円単位で受け取る
+  region: string;
 }): Promise<ProcessedRentPredictionResponse> => {
   // バックエンドのAPIが期待する形式にペイロードを変換
   // FastAPIのスキーマが期待する全てのフィールドを送信
@@ -50,14 +52,20 @@ export const postRentPrediction = async (data: {
     layout: data.layout, // InputFormから受け取ったlayoutをそのまま送信
     station_person: 50, // ダミー値で送信
     rent: Math.max(1, data.rent / 10000), // 円を万円に変換して送信。最低1万円を保証
+    region: data.region,
   };
 
-  // ★★★ この部分が最重要修正点です！ ★★★
-  // ここでpayloadオブジェクト全体を送信することで、FastAPIのバリデーションを通過させます。
-  const response = await axios.post<RentPredictionResponseFromBackend>(
-    "/api/v1/predict", // バックエンドのURLを相対パスに変更
-    payload // ★★★ payloadオブジェクト全体を送信する！ ★★★
-  );
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+const response = await axiosInstance.post<RentPredictionResponseFromBackend>(
+  "/api/v1/predict", 
+  payload
+);
+
 
   const backendData = response.data;
 

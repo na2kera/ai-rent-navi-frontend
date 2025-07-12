@@ -13,8 +13,14 @@ function Result() {
   const navigate = useNavigate();
   const [showDetails, setShowDetails] = useState(false);
 
-  // Home.tsxから渡される全ての値を適切に受け取るように更新
-  // location.state が undefined の場合を考慮し、デフォルト値を空オブジェクトに設定
+  const REVERSE_REGION_MAPPING: { [key: string]: string } = {
+      "suginami": "杉並区",
+      "musashino": "武蔵野市",
+      "kitaku": "北区",
+      "nakanoku": "中野区",
+      "nerimaku": "練馬区",
+  };
+
   const {
     postal_code, // 郵便番号を追加
     address, // 住所を追加
@@ -25,6 +31,7 @@ function Result() {
     layout, // 間取り
     age, // 築年数
     rent, // 家賃価格
+    
 
     // オプション項目も追加
     parking_spaces,
@@ -33,6 +40,8 @@ function Result() {
     management_fee,
     total_units,
     conditions,
+    prefecture, // 追加
+    city,        // 追加
   } = location.state || {};
 
   // APIリクエストのための入力データを準備
@@ -46,6 +55,7 @@ function Result() {
     layout: parseInt(layout) || 0,
     distance_from_station: parseFloat(distance_from_station) || 0,
     rent: parseFloat(rent) || 0,
+    region: city || "",
     // APIに送るデータは予測に必要なものに限定。
     // postal_code, address, nearest_station, structure, parking_spaces, deposit, key_money, management_fee, total_units, conditions
     // はAPI予測には不要で、表示のためにのみ使用される想定。
@@ -245,12 +255,9 @@ function Result() {
           <hr className="result-divider" /> {/* 区切り線 */}
           <h3>入力情報の詳細</h3> {/* 詳細情報のタイトル */}
           <p>
-            <strong>郵便番号:</strong>{" "}
-            <span className="value">{postal_code || "N/A"}</span>
-          </p>
-          <p>
             <strong>住所:</strong>{" "}
-            <span className="value">{address || "N/A"}</span>
+            <span className="value">{prefecture || "N/A"}</span>
+            <span className="value">{REVERSE_REGION_MAPPING[city] || city || "N/A"}</span>
           </p>
           <p>
             <strong>最寄り駅:</strong>{" "}
