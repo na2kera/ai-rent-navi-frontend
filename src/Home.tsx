@@ -49,10 +49,7 @@ function Home() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOcrModalOpen, setIsOcrModalOpen] = useState(false);
 
- // 郵便番号自動入力のための新しいState
-  const [zipCode, setZipCode] = useState(""); // 郵便番号
-  const [useZipCodeAutoFill, setUseZipCodeAutoFill] = useState(false); // 自動入力を有効にするかどうかのトグル
-  
+ 
   // 半角数字のみ・整数かを判定
   const isValidInteger = (value: string) =>
     /^[0-9]+$/.test(value) || value === ""; // 空文字も許容する
@@ -88,11 +85,6 @@ function Home() {
     const fieldsToValidate = fieldKey ? requiredFields.filter(f => f.key === fieldKey) : requiredFields;
 
     fieldsToValidate.forEach(({ key, value, type }) => {
-      // 郵便番号自動入力が有効で、かつ都道府県または市区町村の場合、値があれば必須チェックをスキップ
-      if ((key === "prefecture" || key === "city") && useZipCodeAutoFill && value.trim() !== "") {
-        delete newErrors[key];
-        return;
-      }
       if (value.trim() === "") {
         newErrors[key] = `必須項目です。`;
       } else if (hasWhitespace(value)) {
@@ -169,91 +161,6 @@ function Home() {
       // 入力と同時にバリデーションを実行
       validate(key, newValue);
     };
-
-const handleZipCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const newZipCode = e.target.value;
-  setZipCode(newZipCode);
-
-  // 自動入力がオフのときは終了
-  if (!useZipCodeAutoFill) return;
-
-  if (newZipCode.length < 7 || !/^\d{7}$/.test(newZipCode)) {
-    setErrors(prev => {
-      const newErrors = { ...prev };
-      delete newErrors.zipCode;
-      return newErrors;
-    });
-    setPrefecture("");
-    setCity("");
-    return;
-  }
-
-  try {
-    const requestBody = {
-      grant_type: 'client_credentials',
-      client_id: import.meta.env.VITE_JP_POST_CLIENT_ID,
-      secret_key: import.meta.env.VITE_JP_POST_SECRET_KEY,
-    };
-
-    const tokenResponse = await fetch('/jpapi/api/v1/j/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    });
-
-    if (!tokenResponse.ok) {
-      const errorData = await tokenResponse.text();
-      console.error("トークン取得APIからのエラーレスポンス:", errorData);
-      throw new Error(`トークン取得エラー: ${tokenResponse.status} ${tokenResponse.statusText}`);
-    }
-
-    const tokenData = await tokenResponse.json();
-    const accessToken = tokenData.token;
-
-    if (!accessToken) {
-      throw new Error('レスポンスにアクセストークンが見つかりません。');
-    }
-
-    const addressResponse = await fetch(`/jpapi/api/v1/searchcode/${newZipCode}`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!addressResponse.ok) {
-      throw new Error(`住所検索エラー: ${addressResponse.status} ${addressResponse.statusText}`);
-    }
-
-    const addressData = await addressResponse.json();
-
-    console.log("住所検索APIのレスポンス:", addressData);
-
-if (addressData.addresses?.length > 0) {
-  const address = addressData.addresses[0];
-  setPrefecture(address.pref_name || "");
-  setCity(`${address.city_name || ""}${address.town_name || ""}`);
-  setErrors(prev => {
-    const newErrors = { ...prev };
-    delete newErrors.zipCode;
-    return newErrors;
-  });
-} else {
-  setErrors(prev => ({ ...prev, zipCode: "該当する住所が見つかりませんでした。" }));
-  setPrefecture("");
-  setCity("");
-}
-
-
-  } catch (error) {
-    console.error("郵便番号検索処理全体のエラー:", error);
-    const errorMessage = error instanceof Error ? error.message : "不明なエラーが発生しました。";
-    setErrors(prev => ({ ...prev, zipCode: errorMessage }));
-    setPrefecture("");
-    setCity("");
-  }
-};
 
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -398,57 +305,6 @@ if (addressData.addresses?.length > 0) {
         <p className="required-message">
           <span className="required-asterisk">*</span>は必須項目です。
         </p>
-
-        {/* 郵便番号自動入力のトグル */}
-        <div className="form-row"
-          style={{marginBottom: "1rem", display: "flex", justifyContent: "flex-start"}}
-        >
-          <div className="form-group"
-            style={{display: "flex", flexDirection: "row", alignItems: "center", width: "auto",}}
-          >
-            <input
-              type="checkbox"
-              id="zip-code-toggle"
-              checked={useZipCodeAutoFill}
-              onChange={() => {
-                setUseZipCodeAutoFill(!useZipCodeAutoFill);
-                if (useZipCodeAutoFill) {
-                  setZipCode("");
-                  setErrors(prevErrors => {
-                    const updatedErrors = { ...prevErrors };
-                    delete updatedErrors.zipCode;
-                    return updatedErrors;
-                  });
-                }
-              }}
-            style={{transform: "scale(2.0)", marginRight: "10px", marginTop: "1px" }}
-            />
-            <label htmlFor="zip-code-toggle" style={{ marginRight: "20px",whiteSpace: "nowrap" }}>
-              郵便番号から都道府県と市区町村を検索
-            </label>
-          </div>
-        </div>
-
-        {/* 郵便番号入力フィールド (トグルがオンの場合のみ表示) */}
-        {useZipCodeAutoFill && (
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="zip-code">郵便番号</label>
-              <input
-                type="text"
-                id="zip-code"
-                value={zipCode}
-                onChange={handleZipCodeChange}
-                placeholder="例: 1670051 (半角数字7桁)"
-                maxLength={7}
-              />
-              {errors.zipCode && (
-                <p className="error-message" style={{ fontSize: "1rem" }}>{errors.zipCode}</p>
-              )}
-            </div>
-            <div className="form-group"></div> {/* レイアウト調整用 */}
-          </div>
-        )}
 
 
         {/* 必須項目: 都道府県 */}
