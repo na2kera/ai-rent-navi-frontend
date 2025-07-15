@@ -266,13 +266,18 @@ if (addressData.addresses?.length > 0) {
     return; // 処理を中断します
   }
 
+    // 「駅」で終わる場合は末尾を削除
+    const sanitizedStation = nearest_station.trim().endsWith("駅")
+      ? nearest_station.trim().slice(0, -1)
+      : nearest_station.trim();
+
     // 数値項目をnumber型に変換（オプション項目は空文字の場合undefinedにする）
     // こちらも指定された順序に並べ替え
     navigate("/result", {
       state: {
         prefecture: prefecture,
         city: backendRegionKey,
-        nearest_station: nearest_station,
+        nearest_station: sanitizedStation,
         distance_from_station: parseInt(station_distance),
         area: parseFloat(area),
         age: parseInt(age),
