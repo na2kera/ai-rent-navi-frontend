@@ -356,7 +356,14 @@ function Result() {
 
         {/* 「再判定する」ボタンは画面下部に固定 */}
         <button
-          onClick={() => navigate("/", { state: location.state })}
+          onClick={() =>
+            navigate("/", {
+              state: {
+                ...location.state,
+                city: REVERSE_REGION_MAPPING[city] || city,
+              },
+            })
+          }
           className="submit-button"
         >
           再判定する
