@@ -55,17 +55,10 @@ export const postRentPrediction = async (data: {
     region: data.region,
   };
 
-const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-const response = await axiosInstance.post<RentPredictionResponseFromBackend>(
-  "/api/v1/predict", 
-  payload
-);
-
+  const response = await axios.post<RentPredictionResponseFromBackend>(
+    "/api/v1/predict",
+    payload
+  );
 
   const backendData = response.data;
 
