@@ -23,7 +23,7 @@ function Result() {
 
   const {
     postal_code, // 郵便番号を追加
-    address, // 住所を追加
+
     structure, // 構造を追加
     nearest_station, // 最寄り駅を追加
     distance_from_station, // 最寄駅からの分数
@@ -76,7 +76,7 @@ function Result() {
     if (data && location.state) {
       const historyInput: PropertyInput = {
         postal_code: postal_code || "",
-        address: address || "",
+        address: `${prefecture || ""}${REVERSE_REGION_MAPPING[city] || city || ""}`,
         nearest_station: nearest_station || "",
         distance_from_station: parseInt(distance_from_station) || 0,
         area: parseFloat(area) || 0,
@@ -84,6 +84,8 @@ function Result() {
         structure: parseInt(structure) || 0,
         layout: parseInt(layout) || 0,
         rent: parseFloat(rent) || 0,
+        prefecture: prefecture || "",
+        city: REVERSE_REGION_MAPPING[city] || city || "",
         management_fee: management_fee ? parseFloat(management_fee) : undefined,
         total_units: total_units ? parseInt(total_units) : undefined,
       };
@@ -102,7 +104,8 @@ function Result() {
     data,
     location.state,
     postal_code,
-    address,
+    prefecture,
+    city,
     nearest_station,
     distance_from_station,
     area,
