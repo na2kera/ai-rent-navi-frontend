@@ -9,6 +9,8 @@ export interface PropertyInput {
   structure: number;
   layout: number;
   rent: number;
+  prefecture: string;
+  city: string;
   management_fee?: number;
   total_units?: number;
 }
