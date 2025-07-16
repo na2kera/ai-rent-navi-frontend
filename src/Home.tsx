@@ -1,4 +1,5 @@
 import OcrCameraModal from "./OcrCameraModal";
+import { PREFECTURES, REGION_MAPPING } from "./constants/region";
 import { extractRentalPropertyData } from "./geminiService";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -6,15 +7,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 function Home() {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const REGION_MAPPING: { [key: string]: string } = {
-    杉並区: "suginami",
-    武蔵野市: "musashino",
-    北区: "kitaku",
-    中野区: "nakanoku",
-    練馬区: "nerimaku",
-    // config.json に他の地域を追加した場合、ここにも同様に追加
-  };
 
   // 必須項目 - location.stateから初期値を設定
   const [prefecture, setPrefecture] = useState(
@@ -355,11 +347,11 @@ function Home() {
     e.preventDefault();
     if (!validate()) return; // 最終チェック
 
-    const backendRegionKey = REGION_MAPPING[region];
+    const backendRegionKey = REGION_MAPPING[prefecture]?.[region];
     if (!backendRegionKey) {
       alert(
         `対応する地域が見つかりません: "${region}"。入力を見直してください。\n利用可能な地域: ${Object.keys(
-          REGION_MAPPING
+          REGION_MAPPING[prefecture] || {}
         ).join(", ")}`
       );
       return; // 処理を中断します
@@ -438,6 +430,10 @@ function Home() {
     setTotalUnits("");
     setErrors({});
   };
+
+  const cityOptions = REGION_MAPPING[prefecture]
+    ? Object.keys(REGION_MAPPING[prefecture])
+    : null;
 
   return (
     <div className="form-container">
@@ -580,7 +576,11 @@ function Home() {
               required
             >
               <option value="">選択してください</option>
-              <option value="東京都">東京都</option>
+              {PREFECTURES.map((pref) => (
+                <option key={pref} value={pref}>
+                  {pref}
+                </option>
+              ))}
             </select>
             {errors.prefecture && (
               <p className="error-message" style={{ fontSize: "1rem" }}>
@@ -597,14 +597,14 @@ function Home() {
               <label>
                 市区町村<span className="required-asterisk">*</span>
               </label>
-              {prefecture === "東京都" ? (
+              {cityOptions ? (
                 <select
                   value={region}
                   onChange={handleChange(setCity, "city")}
                   required
                 >
                   <option value="">選択してください</option>
-                  {Object.keys(REGION_MAPPING).map((city) => (
+                  {cityOptions.map((city) => (
                     <option key={city} value={city}>
                       {city}
                     </option>
