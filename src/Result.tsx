@@ -7,19 +7,13 @@ import type { ProcessedRentPredictionResponse } from "./api";
 import { saveHistoryItem } from "./historyUtils";
 import type { PropertyInput, PredictionResult } from "./types";
 import "./App.css"; // App.css をインポート
+import { REVERSE_REGION_MAPPING } from "./constants/region";
 
 function Result() {
   const location = useLocation();
   const navigate = useNavigate();
   const [showDetails, setShowDetails] = useState(false);
 
-  const REVERSE_REGION_MAPPING: { [key: string]: string } = {
-      "suginami": "杉並区",
-      "musashino": "武蔵野市",
-      "kitaku": "北区",
-      "nakanoku": "中野区",
-      "nerimaku": "練馬区",
-  };
 
   const {
     postal_code, // 郵便番号を追加
@@ -62,6 +56,7 @@ function Result() {
     // 必要に応じてAPIの引数に追加してください。
   };
 
+
   const { data, isLoading, isError, error } = useQuery<
     ProcessedRentPredictionResponse,
     Error
@@ -89,6 +84,7 @@ function Result() {
         management_fee: management_fee ? parseFloat(management_fee) : undefined,
         total_units: total_units ? parseInt(total_units) : undefined,
       };
+    
 
       const historyResult: PredictionResult = {
         predicted_rent: data.predicted_rent,
@@ -97,6 +93,7 @@ function Result() {
         message: data.message,
         price_evaluation: data.price_evaluation, // 評価を履歴に追加
       };
+    
 
       saveHistoryItem(historyInput, historyResult);
     }
@@ -197,7 +194,9 @@ function Result() {
     10: "4K",
     11: "4DK",
     12: "4LDK以上",
-  };
+  } as const;
+  
+
   const displayLayout = layoutMap[parseInt(layout)] || layout;
 
   // 構造の数値から文字列へのマッピング
@@ -207,7 +206,9 @@ function Result() {
     3: "RC造 (鉄筋コンクリート造)",
     4: "SRC造 (鉄骨鉄筋コンクリート造)",
     5: "その他",
-  };
+  } as const;
+  
+
   const displayStructure = structureMap[parseInt(structure)] || structure;
 
   return (
