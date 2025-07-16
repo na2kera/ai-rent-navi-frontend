@@ -277,9 +277,35 @@ function Home() {
     try {
       const extractedData = await extractRentalPropertyData(imageData);
 
-      // extracted dataをフォームに反映
-      if (extractedData.prefecture) setPrefecture(extractedData.prefecture);
-      if (extractedData.city) setCity(extractedData.city);
+      // extracted dataをフォームに反映 (定義済みの都道府県 / 市区町村のみ自動入力)
+      if (
+        extractedData.prefecture &&
+        PREFECTURES.includes(extractedData.prefecture)
+      ) {
+        setPrefecture(extractedData.prefecture);
+        // 市区町村も存在チェック
+        if (
+          extractedData.city &&
+          REGION_MAPPING[extractedData.prefecture] &&
+          REGION_MAPPING[extractedData.prefecture][extractedData.city]
+        ) {
+          setCity(extractedData.city);
+        }
+      }
+      // もし都道府県が未定義でも、市区町村単独で存在していれば入力する
+      else if (extractedData.city) {
+        // PREFECTURES を走査して該当市区町村があるか確認
+        const matchedPref = PREFECTURES.find(
+          (pref) =>
+            extractedData.city &&
+            REGION_MAPPING[pref] &&
+            REGION_MAPPING[pref][extractedData.city]
+        );
+        if (matchedPref) {
+          setPrefecture(matchedPref);
+          setCity(extractedData.city);
+        }
+      }
       if (extractedData.nearest_station)
         setNearestStation(extractedData.nearest_station);
       if (extractedData.distance_from_station)
