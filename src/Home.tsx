@@ -8,14 +8,13 @@ function Home() {
   const navigate = useNavigate();
 
   const REGION_MAPPING: { [key: string]: string } = {
-      "杉並区": "suginami",
-      "武蔵野市": "musashino",
-      "北区": "kitaku",
-      "中野区": "nakanoku",
-      "練馬区": "nerimaku",
-      // config.json に他の地域を追加した場合、ここにも同様に追加
+    杉並区: "suginami",
+    武蔵野市: "musashino",
+    北区: "kitaku",
+    中野区: "nakanoku",
+    練馬区: "nerimaku",
+    // config.json に他の地域を追加した場合、ここにも同様に追加
   };
-
 
   // 必須項目 - location.stateから初期値を設定
   const [prefecture, setPrefecture] = useState(
@@ -49,10 +48,10 @@ function Home() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOcrModalOpen, setIsOcrModalOpen] = useState(false);
 
- // 郵便番号自動入力のための新しいState
+  // 郵便番号自動入力のための新しいState
   const [zipCode, setZipCode] = useState(""); // 郵便番号
   const [useZipCodeAutoFill, setUseZipCodeAutoFill] = useState(false); // 自動入力を有効にするかどうかのトグル
-  
+
   // 半角数字のみ・整数かを判定
   const isValidInteger = (value: string) =>
     /^[0-9]+$/.test(value) || value === ""; // 空文字も許容する
@@ -64,32 +63,92 @@ function Home() {
 
     // 必須項目に対するバリデーション (指定された順序に並べ替え)
     const requiredFields = [
-      { key: "prefecture", value: fieldValue !== undefined && fieldKey === "prefecture" ? fieldValue : prefecture, type: "text", msg: "都道府県" },
-      { key: "city", value: fieldValue !== undefined && fieldKey === "city" ? fieldValue : region, type: "text", msg: "市区町村" },
+      {
+        key: "prefecture",
+        value:
+          fieldValue !== undefined && fieldKey === "prefecture"
+            ? fieldValue
+            : prefecture,
+        type: "text",
+        msg: "都道府県",
+      },
+      {
+        key: "city",
+        value:
+          fieldValue !== undefined && fieldKey === "city" ? fieldValue : region,
+        type: "text",
+        msg: "市区町村",
+      },
       {
         key: "nearest_station",
-        value: fieldValue !== undefined && fieldKey === "nearest_station" ? fieldValue : nearest_station,
+        value:
+          fieldValue !== undefined && fieldKey === "nearest_station"
+            ? fieldValue
+            : nearest_station,
         type: "text",
         msg: "最寄り駅",
       },
       {
         key: "distance_from_station",
-        value: fieldValue !== undefined && fieldKey === "distance_from_station" ? fieldValue : station_distance,
+        value:
+          fieldValue !== undefined && fieldKey === "distance_from_station"
+            ? fieldValue
+            : station_distance,
         type: "number",
         msg: "最寄駅からの分数",
       },
-      { key: "area", value: fieldValue !== undefined && fieldKey === "area" ? fieldValue : area, type: "number", msg: "面積" },
-      { key: "age", value: fieldValue !== undefined && fieldKey === "age" ? fieldValue : age, type: "number", msg: "築年数" },
-      { key: "structure", value: fieldValue !== undefined && fieldKey === "structure" ? fieldValue : structure, type: "number", msg: "構造" },
-      { key: "layout", value: fieldValue !== undefined && fieldKey === "layout" ? fieldValue : layout, type: "number", msg: "間取り" },
-      { key: "rent", value: fieldValue !== undefined && fieldKey === "rent" ? fieldValue : rent, type: "number", msg: "家賃価格" },
+      {
+        key: "area",
+        value:
+          fieldValue !== undefined && fieldKey === "area" ? fieldValue : area,
+        type: "number",
+        msg: "面積",
+      },
+      {
+        key: "age",
+        value:
+          fieldValue !== undefined && fieldKey === "age" ? fieldValue : age,
+        type: "number",
+        msg: "築年数",
+      },
+      {
+        key: "structure",
+        value:
+          fieldValue !== undefined && fieldKey === "structure"
+            ? fieldValue
+            : structure,
+        type: "number",
+        msg: "構造",
+      },
+      {
+        key: "layout",
+        value:
+          fieldValue !== undefined && fieldKey === "layout"
+            ? fieldValue
+            : layout,
+        type: "number",
+        msg: "間取り",
+      },
+      {
+        key: "rent",
+        value:
+          fieldValue !== undefined && fieldKey === "rent" ? fieldValue : rent,
+        type: "number",
+        msg: "家賃価格",
+      },
     ];
 
-    const fieldsToValidate = fieldKey ? requiredFields.filter(f => f.key === fieldKey) : requiredFields;
+    const fieldsToValidate = fieldKey
+      ? requiredFields.filter((f) => f.key === fieldKey)
+      : requiredFields;
 
     fieldsToValidate.forEach(({ key, value, type }) => {
       // 郵便番号自動入力が有効で、かつ都道府県または市区町村の場合、値があれば必須チェックをスキップ
-      if ((key === "prefecture" || key === "city") && useZipCodeAutoFill && value.trim() !== "") {
+      if (
+        (key === "prefecture" || key === "city") &&
+        useZipCodeAutoFill &&
+        value.trim() !== ""
+      ) {
         delete newErrors[key];
         return;
       }
@@ -114,27 +173,53 @@ function Home() {
     if (fieldKey === "layout" || fieldKey === undefined) {
       if (layout !== "" && (Number(layout) < 1 || Number(layout) > 12)) {
         newErrors.layout = "間取りは1から12までの数値を入力してください。";
-      } else if (fieldKey === "layout" && layout.trim() !== "" && !newErrors.layout) {
+      } else if (
+        fieldKey === "layout" &&
+        layout.trim() !== "" &&
+        !newErrors.layout
+      ) {
         delete newErrors.layout;
       }
     }
     if (fieldKey === "structure" || fieldKey === undefined) {
-      if (structure !== "" && (Number(structure) < 1 || Number(structure) > 5)) {
+      if (
+        structure !== "" &&
+        (Number(structure) < 1 || Number(structure) > 5)
+      ) {
         // 例: 1:木造, 2:S, 3:RC, 4:SRC, 5:その他
         newErrors.structure = "構造は1から5までの数値を入力してください。"; // バックエンドの定義に合わせる
-      } else if (fieldKey === "structure" && structure.trim() !== "" && !newErrors.structure) {
+      } else if (
+        fieldKey === "structure" &&
+        structure.trim() !== "" &&
+        !newErrors.structure
+      ) {
         delete newErrors.structure;
       }
     }
 
     // オプション項目に対する数字バリデーション (入力があれば数値チェック)
     const optionalNumberFields = [
-      { key: "management_fee", value: fieldValue !== undefined && fieldKey === "management_fee" ? fieldValue : kanrihi, msg: "管理費" },
-      { key: "total_units", value: fieldValue !== undefined && fieldKey === "total_units" ? fieldValue : soukosuu, msg: "総戸数" },
+      {
+        key: "management_fee",
+        value:
+          fieldValue !== undefined && fieldKey === "management_fee"
+            ? fieldValue
+            : kanrihi,
+        msg: "管理費",
+      },
+      {
+        key: "total_units",
+        value:
+          fieldValue !== undefined && fieldKey === "total_units"
+            ? fieldValue
+            : soukosuu,
+        msg: "総戸数",
+      },
     ];
 
-    const optionalFieldsToValidate = fieldKey ? optionalNumberFields.filter(f => f.key === fieldKey) : optionalNumberFields;
-
+    const optionalFieldsToValidate = fieldKey
+      ? optionalNumberFields.filter((f) => f.key === fieldKey)
+      : optionalNumberFields;
 
     optionalFieldsToValidate.forEach(({ key, value }) => {
       if (value !== "") {
@@ -170,91 +255,101 @@ function Home() {
       validate(key, newValue);
     };
 
-const handleZipCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const newZipCode = e.target.value;
-  setZipCode(newZipCode);
+  const handleZipCodeChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newZipCode = e.target.value;
+    setZipCode(newZipCode);
 
-  // 自動入力がオフのときは終了
-  if (!useZipCodeAutoFill) return;
+    // 自動入力がオフのときは終了
+    if (!useZipCodeAutoFill) return;
 
-  if (newZipCode.length < 7 || !/^\d{7}$/.test(newZipCode)) {
-    setErrors(prev => {
-      const newErrors = { ...prev };
-      delete newErrors.zipCode;
-      return newErrors;
-    });
-    setPrefecture("");
-    setCity("");
-    return;
-  }
-
-  try {
-    const requestBody = {
-      grant_type: 'client_credentials',
-      client_id: import.meta.env.VITE_JP_POST_CLIENT_ID,
-      secret_key: import.meta.env.VITE_JP_POST_SECRET_KEY,
-    };
-
-    const tokenResponse = await fetch('/jpapi/api/v1/j/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    });
-
-    if (!tokenResponse.ok) {
-      const errorData = await tokenResponse.text();
-      console.error("トークン取得APIからのエラーレスポンス:", errorData);
-      throw new Error(`トークン取得エラー: ${tokenResponse.status} ${tokenResponse.statusText}`);
+    if (newZipCode.length < 7 || !/^\d{7}$/.test(newZipCode)) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors.zipCode;
+        return newErrors;
+      });
+      setPrefecture("");
+      setCity("");
+      return;
     }
 
-    const tokenData = await tokenResponse.json();
-    const accessToken = tokenData.token;
+    try {
+      const requestBody = {
+        grant_type: "client_credentials",
+        client_id: import.meta.env.VITE_JP_POST_CLIENT_ID,
+        secret_key: import.meta.env.VITE_JP_POST_SECRET_KEY,
+      };
 
-    if (!accessToken) {
-      throw new Error('レスポンスにアクセストークンが見つかりません。');
+      const tokenResponse = await fetch("/jpapi/api/v1/j/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!tokenResponse.ok) {
+        const errorData = await tokenResponse.text();
+        console.error("トークン取得APIからのエラーレスポンス:", errorData);
+        throw new Error(
+          `トークン取得エラー: ${tokenResponse.status} ${tokenResponse.statusText}`
+        );
+      }
+
+      const tokenData = await tokenResponse.json();
+      const accessToken = tokenData.token;
+
+      if (!accessToken) {
+        throw new Error("レスポンスにアクセストークンが見つかりません。");
+      }
+
+      const addressResponse = await fetch(
+        `/jpapi/api/v1/searchcode/${newZipCode}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!addressResponse.ok) {
+        throw new Error(
+          `住所検索エラー: ${addressResponse.status} ${addressResponse.statusText}`
+        );
+      }
+
+      const addressData = await addressResponse.json();
+
+      console.log("住所検索APIのレスポンス:", addressData);
+
+      if (addressData.addresses?.length > 0) {
+        const address = addressData.addresses[0];
+        setPrefecture(address.pref_name || "");
+        setCity(`${address.city_name || ""}${address.town_name || ""}`);
+        setErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors.zipCode;
+          return newErrors;
+        });
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          zipCode: "該当する住所が見つかりませんでした。",
+        }));
+        setPrefecture("");
+        setCity("");
+      }
+    } catch (error) {
+      console.error("郵便番号検索処理全体のエラー:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "不明なエラーが発生しました。";
+      setErrors((prev) => ({ ...prev, zipCode: errorMessage }));
+      setPrefecture("");
+      setCity("");
     }
-
-    const addressResponse = await fetch(`/jpapi/api/v1/searchcode/${newZipCode}`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!addressResponse.ok) {
-      throw new Error(`住所検索エラー: ${addressResponse.status} ${addressResponse.statusText}`);
-    }
-
-    const addressData = await addressResponse.json();
-
-    console.log("住所検索APIのレスポンス:", addressData);
-
-if (addressData.addresses?.length > 0) {
-  const address = addressData.addresses[0];
-  setPrefecture(address.pref_name || "");
-  setCity(`${address.city_name || ""}${address.town_name || ""}`);
-  setErrors(prev => {
-    const newErrors = { ...prev };
-    delete newErrors.zipCode;
-    return newErrors;
-  });
-} else {
-  setErrors(prev => ({ ...prev, zipCode: "該当する住所が見つかりませんでした。" }));
-  setPrefecture("");
-  setCity("");
-}
-
-
-  } catch (error) {
-    console.error("郵便番号検索処理全体のエラー:", error);
-    const errorMessage = error instanceof Error ? error.message : "不明なエラーが発生しました。";
-    setErrors(prev => ({ ...prev, zipCode: errorMessage }));
-    setPrefecture("");
-    setCity("");
-  }
-};
-
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -262,9 +357,13 @@ if (addressData.addresses?.length > 0) {
 
     const backendRegionKey = REGION_MAPPING[region];
     if (!backendRegionKey) {
-    alert(`対応する地域が見つかりません: "${region}"。入力を見直してください。\n利用可能な地域: ${Object.keys(REGION_MAPPING).join(', ')}`);
-    return; // 処理を中断します
-  }
+      alert(
+        `対応する地域が見つかりません: "${region}"。入力を見直してください。\n利用可能な地域: ${Object.keys(
+          REGION_MAPPING
+        ).join(", ")}`
+      );
+      return; // 処理を中断します
+    }
 
     // 「駅」で終わる場合は末尾を削除
     const sanitizedStation = nearest_station.trim().endsWith("駅")
@@ -285,8 +384,7 @@ if (addressData.addresses?.length > 0) {
         layout: parseInt(layout),
         rent: parseFloat(rent),
 
-        management_fee:
-          kanrihi === "" ? undefined : parseFloat(kanrihi),
+        management_fee: kanrihi === "" ? undefined : parseFloat(kanrihi),
         total_units: soukosuu === "" ? undefined : parseInt(soukosuu),
       },
     });
@@ -400,11 +498,22 @@ if (addressData.addresses?.length > 0) {
         </p>
 
         {/* 郵便番号自動入力のトグル */}
-        <div className="form-row"
-          style={{marginBottom: "1rem", display: "flex", justifyContent: "flex-start"}}
+        <div
+          className="form-row"
+          style={{
+            marginBottom: "1rem",
+            display: "flex",
+            justifyContent: "flex-start",
+          }}
         >
-          <div className="form-group"
-            style={{display: "flex", flexDirection: "row", alignItems: "center", width: "auto",}}
+          <div
+            className="form-group"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              width: "auto",
+            }}
           >
             <input
               type="checkbox"
@@ -414,16 +523,23 @@ if (addressData.addresses?.length > 0) {
                 setUseZipCodeAutoFill(!useZipCodeAutoFill);
                 if (useZipCodeAutoFill) {
                   setZipCode("");
-                  setErrors(prevErrors => {
+                  setErrors((prevErrors) => {
                     const updatedErrors = { ...prevErrors };
                     delete updatedErrors.zipCode;
                     return updatedErrors;
                   });
                 }
               }}
-            style={{transform: "scale(2.0)", marginRight: "10px", marginTop: "1px" }}
+              style={{
+                transform: "scale(2.0)",
+                marginRight: "10px",
+                marginTop: "1px",
+              }}
             />
-            <label htmlFor="zip-code-toggle" style={{ marginRight: "20px",whiteSpace: "nowrap" }}>
+            <label
+              htmlFor="zip-code-toggle"
+              style={{ marginRight: "20px", whiteSpace: "nowrap" }}
+            >
               郵便番号から都道府県と市区町村を検索
             </label>
           </div>
@@ -443,13 +559,14 @@ if (addressData.addresses?.length > 0) {
                 maxLength={7}
               />
               {errors.zipCode && (
-                <p className="error-message" style={{ fontSize: "1rem" }}>{errors.zipCode}</p>
+                <p className="error-message" style={{ fontSize: "1rem" }}>
+                  {errors.zipCode}
+                </p>
               )}
             </div>
             <div className="form-group"></div> {/* レイアウト調整用 */}
           </div>
         )}
-
 
         {/* 必須項目: 都道府県 */}
         <div className="form-row">
@@ -457,35 +574,62 @@ if (addressData.addresses?.length > 0) {
             <label>
               都道府県<span className="required-asterisk">*</span>
             </label>
-            <input
-              type="text"
+            <select
               value={prefecture}
               onChange={handleChange(setPrefecture, "prefecture")}
-              placeholder="例: 東京都"
               required
-            />
+            >
+              <option value="">選択してください</option>
+              <option value="東京都">東京都</option>
+            </select>
             {errors.prefecture && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.prefecture}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.prefecture}
+              </p>
             )}
-          </div>
-          {/* 必須項目: 市区町村 */}
-          <div className="form-group">
-            <label>
-              市区町村<span className="required-asterisk">*</span>
-            </label>
-            <input
-              type="text"
-              value={region}
-              onChange={handleChange(setCity, "city")}
-              placeholder="例: 杉並区"
-              required
-            />
-            {errors.city && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.city}</p>}
           </div>
         </div>
 
+        {/* 市区町村のみ都道府県が選択された時だけ表示 */}
+        {prefecture !== "" && (
+          <div className="form-row">
+            <div className="form-group">
+              <label>
+                市区町村<span className="required-asterisk">*</span>
+              </label>
+              {prefecture === "東京都" ? (
+                <select
+                  value={region}
+                  onChange={handleChange(setCity, "city")}
+                  required
+                >
+                  <option value="">選択してください</option>
+                  {Object.keys(REGION_MAPPING).map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  value={region}
+                  onChange={handleChange(setCity, "city")}
+                  placeholder="例: ○○市 / ○○区"
+                  required
+                />
+              )}
+              {errors.city && (
+                <p className="error-message" style={{ fontSize: "1rem" }}>
+                  {errors.city}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 最寄り駅 */}
         <div className="form-row">
-          {/* 必須項目: 最寄り駅 */}
           <div className="form-group">
             <label>
               最寄り駅 (駅名)<span className="required-asterisk">*</span>
@@ -498,10 +642,15 @@ if (addressData.addresses?.length > 0) {
               required
             />
             {errors.nearest_station && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.nearest_station}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.nearest_station}
+              </p>
             )}
           </div>
-          {/* 必須項目: 最寄駅からの分数 */}
+        </div>
+
+        {/* 最寄駅からの分数 */}
+        <div className="form-row">
           <div className="form-group">
             <label>
               最寄駅からの分数<span className="required-asterisk">*</span>
@@ -517,13 +666,15 @@ if (addressData.addresses?.length > 0) {
               required
             />
             {errors.distance_from_station && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.distance_from_station}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.distance_from_station}
+              </p>
             )}
           </div>
         </div>
 
+        {/* 面積 */}
         <div className="form-row">
-          {/* 必須項目: 面積 */}
           <div className="form-group">
             <label>
               面積 (㎡)<span className="required-asterisk">*</span>
@@ -535,9 +686,16 @@ if (addressData.addresses?.length > 0) {
               placeholder="例: 40 (半角数字のみ)"
               required
             />
-            {errors.area && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.area}</p>}
+            {errors.area && (
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.area}
+              </p>
+            )}
           </div>
-          {/* 必須項目: 築年数 */}
+        </div>
+
+        {/* 築年数 */}
+        <div className="form-row">
           <div className="form-group">
             <label>
               築年数<span className="required-asterisk">*</span>
@@ -549,12 +707,16 @@ if (addressData.addresses?.length > 0) {
               placeholder="例: 20 (半角数字のみ)"
               required
             />
-            {errors.age && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.age}</p>}
+            {errors.age && (
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.age}
+              </p>
+            )}
           </div>
         </div>
 
+        {/* 構造 */}
         <div className="form-row">
-          {/* 必須項目: 構造 */}
           <div className="form-group">
             <label>
               構造<span className="required-asterisk">*</span>
@@ -572,10 +734,15 @@ if (addressData.addresses?.length > 0) {
               <option value="5">その他</option>
             </select>
             {errors.structure && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.structure}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.structure}
+              </p>
             )}
           </div>
-          {/* 必須項目: 間取り */}
+        </div>
+
+        {/* 間取り */}
+        <div className="form-row">
           <div className="form-group">
             <label>
               間取り<span className="required-asterisk">*</span>
@@ -599,12 +766,16 @@ if (addressData.addresses?.length > 0) {
               <option value="11">4DK</option>
               <option value="12">4LDK以上</option>
             </select>
-            {errors.layout && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.layout}</p>}
+            {errors.layout && (
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.layout}
+              </p>
+            )}
           </div>
         </div>
 
+        {/* 家賃価格 */}
         <div className="form-row">
-          {/* 必須項目: 家賃価格 */}
           <div className="form-group">
             <label>
               家賃価格 (円)<span className="required-asterisk">*</span>
@@ -616,10 +787,12 @@ if (addressData.addresses?.length > 0) {
               placeholder="例: 60000 (半角数字のみ)"
               required
             />
-            {errors.rent && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.rent}</p>}
+            {errors.rent && (
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.rent}
+              </p>
+            )}
           </div>
-          {/* レイアウトを維持するための空のdiv */}
-          <div className="form-group"></div>
         </div>
 
         <hr
@@ -638,7 +811,9 @@ if (addressData.addresses?.length > 0) {
               placeholder="例: 5000 (半角数字のみ)"
             />
             {errors.management_fee && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.management_fee}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.management_fee}
+              </p>
             )}
           </div>
 
@@ -651,13 +826,19 @@ if (addressData.addresses?.length > 0) {
               placeholder="例: 30 (半角数字のみ)"
             />
             {errors.total_units && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.total_units}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.total_units}
+              </p>
             )}
           </div>
         </div>
 
         <hr
-          style={{ margin: "100px auto 80px", width: "80%", borderColor: "#ddd" }}
+          style={{
+            margin: "100px auto 80px",
+            width: "80%",
+            borderColor: "#ddd",
+          }}
         />
 
         <div style={{ marginTop: "1rem" }}>
