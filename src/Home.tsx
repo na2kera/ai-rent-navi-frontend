@@ -40,7 +40,6 @@ function Home() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOcrModalOpen, setIsOcrModalOpen] = useState(false);
 
-
   // 半角数字のみ・整数かを判定
   const isValidInteger = (value: string) =>
     /^[0-9]+$/.test(value) || value === ""; // 空文字も許容する
@@ -132,7 +131,6 @@ function Home() {
       : requiredFields;
 
     fieldsToValidate.forEach(({ key, value, type }) => {
-
       if (value.trim() === "") {
         newErrors[key] = `必須項目です。`;
       } else if (hasWhitespace(value)) {
@@ -235,8 +233,6 @@ function Home() {
       // 入力と同時にバリデーションを実行
       validate(key, newValue);
     };
-
-
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -387,8 +383,6 @@ function Home() {
         <p className="required-message">
           <span className="required-asterisk">*</span>は必須項目です。
         </p>
-
-
 
         {/* 必須項目: 都道府県 */}
         <div className="form-row">
