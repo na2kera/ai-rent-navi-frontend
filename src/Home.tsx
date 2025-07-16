@@ -1,4 +1,5 @@
 import OcrCameraModal from "./OcrCameraModal";
+import { PREFECTURES, REGION_MAPPING } from "./constants/region";
 import { extractRentalPropertyData } from "./geminiService";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -6,16 +7,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 function Home() {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const REGION_MAPPING: { [key: string]: string } = {
-      "杉並区": "suginami",
-      "武蔵野市": "musashino",
-      "北区": "kitaku",
-      "中野区": "nakanoku",
-      "練馬区": "nerimaku",
-      // config.json に他の地域を追加した場合、ここにも同様に追加
-  };
-
 
   // 必須項目 - location.stateから初期値を設定
   const [prefecture, setPrefecture] = useState(
@@ -49,7 +40,6 @@ function Home() {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOcrModalOpen, setIsOcrModalOpen] = useState(false);
 
- 
   // 半角数字のみ・整数かを判定
   const isValidInteger = (value: string) =>
     /^[0-9]+$/.test(value) || value === ""; // 空文字も許容する
@@ -61,28 +51,84 @@ function Home() {
 
     // 必須項目に対するバリデーション (指定された順序に並べ替え)
     const requiredFields = [
-      { key: "prefecture", value: fieldValue !== undefined && fieldKey === "prefecture" ? fieldValue : prefecture, type: "text", msg: "都道府県" },
-      { key: "city", value: fieldValue !== undefined && fieldKey === "city" ? fieldValue : region, type: "text", msg: "市区町村" },
+      {
+        key: "prefecture",
+        value:
+          fieldValue !== undefined && fieldKey === "prefecture"
+            ? fieldValue
+            : prefecture,
+        type: "text",
+        msg: "都道府県",
+      },
+      {
+        key: "city",
+        value:
+          fieldValue !== undefined && fieldKey === "city" ? fieldValue : region,
+        type: "text",
+        msg: "市区町村",
+      },
       {
         key: "nearest_station",
-        value: fieldValue !== undefined && fieldKey === "nearest_station" ? fieldValue : nearest_station,
+        value:
+          fieldValue !== undefined && fieldKey === "nearest_station"
+            ? fieldValue
+            : nearest_station,
         type: "text",
         msg: "最寄り駅",
       },
       {
         key: "distance_from_station",
-        value: fieldValue !== undefined && fieldKey === "distance_from_station" ? fieldValue : station_distance,
+        value:
+          fieldValue !== undefined && fieldKey === "distance_from_station"
+            ? fieldValue
+            : station_distance,
         type: "number",
         msg: "最寄駅からの分数",
       },
-      { key: "area", value: fieldValue !== undefined && fieldKey === "area" ? fieldValue : area, type: "number", msg: "面積" },
-      { key: "age", value: fieldValue !== undefined && fieldKey === "age" ? fieldValue : age, type: "number", msg: "築年数" },
-      { key: "structure", value: fieldValue !== undefined && fieldKey === "structure" ? fieldValue : structure, type: "number", msg: "構造" },
-      { key: "layout", value: fieldValue !== undefined && fieldKey === "layout" ? fieldValue : layout, type: "number", msg: "間取り" },
-      { key: "rent", value: fieldValue !== undefined && fieldKey === "rent" ? fieldValue : rent, type: "number", msg: "家賃価格" },
+      {
+        key: "area",
+        value:
+          fieldValue !== undefined && fieldKey === "area" ? fieldValue : area,
+        type: "number",
+        msg: "面積",
+      },
+      {
+        key: "age",
+        value:
+          fieldValue !== undefined && fieldKey === "age" ? fieldValue : age,
+        type: "number",
+        msg: "築年数",
+      },
+      {
+        key: "structure",
+        value:
+          fieldValue !== undefined && fieldKey === "structure"
+            ? fieldValue
+            : structure,
+        type: "number",
+        msg: "構造",
+      },
+      {
+        key: "layout",
+        value:
+          fieldValue !== undefined && fieldKey === "layout"
+            ? fieldValue
+            : layout,
+        type: "number",
+        msg: "間取り",
+      },
+      {
+        key: "rent",
+        value:
+          fieldValue !== undefined && fieldKey === "rent" ? fieldValue : rent,
+        type: "number",
+        msg: "家賃価格",
+      },
     ];
 
-    const fieldsToValidate = fieldKey ? requiredFields.filter(f => f.key === fieldKey) : requiredFields;
+    const fieldsToValidate = fieldKey
+      ? requiredFields.filter((f) => f.key === fieldKey)
+      : requiredFields;
 
     fieldsToValidate.forEach(({ key, value, type }) => {
       if (value.trim() === "") {
@@ -106,27 +152,53 @@ function Home() {
     if (fieldKey === "layout" || fieldKey === undefined) {
       if (layout !== "" && (Number(layout) < 1 || Number(layout) > 12)) {
         newErrors.layout = "間取りは1から12までの数値を入力してください。";
-      } else if (fieldKey === "layout" && layout.trim() !== "" && !newErrors.layout) {
+      } else if (
+        fieldKey === "layout" &&
+        layout.trim() !== "" &&
+        !newErrors.layout
+      ) {
         delete newErrors.layout;
       }
     }
     if (fieldKey === "structure" || fieldKey === undefined) {
-      if (structure !== "" && (Number(structure) < 1 || Number(structure) > 5)) {
+      if (
+        structure !== "" &&
+        (Number(structure) < 1 || Number(structure) > 5)
+      ) {
         // 例: 1:木造, 2:S, 3:RC, 4:SRC, 5:その他
         newErrors.structure = "構造は1から5までの数値を入力してください。"; // バックエンドの定義に合わせる
-      } else if (fieldKey === "structure" && structure.trim() !== "" && !newErrors.structure) {
+      } else if (
+        fieldKey === "structure" &&
+        structure.trim() !== "" &&
+        !newErrors.structure
+      ) {
         delete newErrors.structure;
       }
     }
 
     // オプション項目に対する数字バリデーション (入力があれば数値チェック)
     const optionalNumberFields = [
-      { key: "management_fee", value: fieldValue !== undefined && fieldKey === "management_fee" ? fieldValue : kanrihi, msg: "管理費" },
-      { key: "total_units", value: fieldValue !== undefined && fieldKey === "total_units" ? fieldValue : soukosuu, msg: "総戸数" },
+      {
+        key: "management_fee",
+        value:
+          fieldValue !== undefined && fieldKey === "management_fee"
+            ? fieldValue
+            : kanrihi,
+        msg: "管理費",
+      },
+      {
+        key: "total_units",
+        value:
+          fieldValue !== undefined && fieldKey === "total_units"
+            ? fieldValue
+            : soukosuu,
+        msg: "総戸数",
+      },
     ];
 
-    const optionalFieldsToValidate = fieldKey ? optionalNumberFields.filter(f => f.key === fieldKey) : optionalNumberFields;
-
+    const optionalFieldsToValidate = fieldKey
+      ? optionalNumberFields.filter((f) => f.key === fieldKey)
+      : optionalNumberFields;
 
     optionalFieldsToValidate.forEach(({ key, value }) => {
       if (value !== "") {
@@ -162,16 +234,19 @@ function Home() {
       validate(key, newValue);
     };
 
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return; // 最終チェック
 
-    const backendRegionKey = REGION_MAPPING[region];
+    const backendRegionKey = REGION_MAPPING[prefecture]?.[region];
     if (!backendRegionKey) {
-    alert(`対応する地域が見つかりません: "${region}"。入力を見直してください。\n利用可能な地域: ${Object.keys(REGION_MAPPING).join(', ')}`);
-    return; // 処理を中断します
-  }
+      alert(
+        `対応する地域が見つかりません: "${region}"。入力を見直してください。\n利用可能な地域: ${Object.keys(
+          REGION_MAPPING[prefecture] || {}
+        ).join(", ")}`
+      );
+      return; // 処理を中断します
+    }
 
     // 「駅」で終わる場合は末尾を削除
     const sanitizedStation = nearest_station.trim().endsWith("駅")
@@ -192,8 +267,7 @@ function Home() {
         layout: parseInt(layout),
         rent: parseFloat(rent),
 
-        management_fee:
-          kanrihi === "" ? undefined : parseFloat(kanrihi),
+        management_fee: kanrihi === "" ? undefined : parseFloat(kanrihi),
         total_units: soukosuu === "" ? undefined : parseInt(soukosuu),
       },
     });
@@ -247,6 +321,10 @@ function Home() {
     setTotalUnits("");
     setErrors({});
   };
+
+  const cityOptions = REGION_MAPPING[prefecture]
+    ? Object.keys(REGION_MAPPING[prefecture])
+    : null;
 
   return (
     <div className="form-container">
@@ -306,42 +384,72 @@ function Home() {
           <span className="required-asterisk">*</span>は必須項目です。
         </p>
 
-
         {/* 必須項目: 都道府県 */}
         <div className="form-row">
           <div className="form-group">
             <label>
               都道府県<span className="required-asterisk">*</span>
             </label>
-            <input
-              type="text"
+            <select
               value={prefecture}
               onChange={handleChange(setPrefecture, "prefecture")}
-              placeholder="例: 東京都"
               required
-            />
+            >
+              <option value="">選択してください</option>
+              {PREFECTURES.map((pref) => (
+                <option key={pref} value={pref}>
+                  {pref}
+                </option>
+              ))}
+            </select>
             {errors.prefecture && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.prefecture}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.prefecture}
+              </p>
             )}
-          </div>
-          {/* 必須項目: 市区町村 */}
-          <div className="form-group">
-            <label>
-              市区町村<span className="required-asterisk">*</span>
-            </label>
-            <input
-              type="text"
-              value={region}
-              onChange={handleChange(setCity, "city")}
-              placeholder="例: 杉並区"
-              required
-            />
-            {errors.city && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.city}</p>}
           </div>
         </div>
 
+        {/* 市区町村のみ都道府県が選択された時だけ表示 */}
+        {prefecture !== "" && (
+          <div className="form-row">
+            <div className="form-group">
+              <label>
+                市区町村<span className="required-asterisk">*</span>
+              </label>
+              {cityOptions ? (
+                <select
+                  value={region}
+                  onChange={handleChange(setCity, "city")}
+                  required
+                >
+                  <option value="">選択してください</option>
+                  {cityOptions.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  value={region}
+                  onChange={handleChange(setCity, "city")}
+                  placeholder="例: ○○市 / ○○区"
+                  required
+                />
+              )}
+              {errors.city && (
+                <p className="error-message" style={{ fontSize: "1rem" }}>
+                  {errors.city}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 最寄り駅 */}
         <div className="form-row">
-          {/* 必須項目: 最寄り駅 */}
           <div className="form-group">
             <label>
               最寄り駅 (駅名)<span className="required-asterisk">*</span>
@@ -354,10 +462,15 @@ function Home() {
               required
             />
             {errors.nearest_station && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.nearest_station}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.nearest_station}
+              </p>
             )}
           </div>
-          {/* 必須項目: 最寄駅からの分数 */}
+        </div>
+
+        {/* 最寄駅からの分数 */}
+        <div className="form-row">
           <div className="form-group">
             <label>
               最寄駅からの分数<span className="required-asterisk">*</span>
@@ -373,13 +486,15 @@ function Home() {
               required
             />
             {errors.distance_from_station && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.distance_from_station}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.distance_from_station}
+              </p>
             )}
           </div>
         </div>
 
+        {/* 面積 */}
         <div className="form-row">
-          {/* 必須項目: 面積 */}
           <div className="form-group">
             <label>
               面積 (㎡)<span className="required-asterisk">*</span>
@@ -391,9 +506,16 @@ function Home() {
               placeholder="例: 40 (半角数字のみ)"
               required
             />
-            {errors.area && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.area}</p>}
+            {errors.area && (
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.area}
+              </p>
+            )}
           </div>
-          {/* 必須項目: 築年数 */}
+        </div>
+
+        {/* 築年数 */}
+        <div className="form-row">
           <div className="form-group">
             <label>
               築年数<span className="required-asterisk">*</span>
@@ -405,12 +527,16 @@ function Home() {
               placeholder="例: 20 (半角数字のみ)"
               required
             />
-            {errors.age && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.age}</p>}
+            {errors.age && (
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.age}
+              </p>
+            )}
           </div>
         </div>
 
+        {/* 構造 */}
         <div className="form-row">
-          {/* 必須項目: 構造 */}
           <div className="form-group">
             <label>
               構造<span className="required-asterisk">*</span>
@@ -428,10 +554,15 @@ function Home() {
               <option value="5">その他</option>
             </select>
             {errors.structure && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.structure}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.structure}
+              </p>
             )}
           </div>
-          {/* 必須項目: 間取り */}
+        </div>
+
+        {/* 間取り */}
+        <div className="form-row">
           <div className="form-group">
             <label>
               間取り<span className="required-asterisk">*</span>
@@ -455,12 +586,16 @@ function Home() {
               <option value="11">4DK</option>
               <option value="12">4LDK以上</option>
             </select>
-            {errors.layout && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.layout}</p>}
+            {errors.layout && (
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.layout}
+              </p>
+            )}
           </div>
         </div>
 
+        {/* 家賃価格 */}
         <div className="form-row">
-          {/* 必須項目: 家賃価格 */}
           <div className="form-group">
             <label>
               家賃価格 (円)<span className="required-asterisk">*</span>
@@ -472,10 +607,12 @@ function Home() {
               placeholder="例: 60000 (半角数字のみ)"
               required
             />
-            {errors.rent && <p className="error-message" style={{ fontSize: "1rem" }}>{errors.rent}</p>}
+            {errors.rent && (
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.rent}
+              </p>
+            )}
           </div>
-          {/* レイアウトを維持するための空のdiv */}
-          <div className="form-group"></div>
         </div>
 
         <hr
@@ -494,7 +631,9 @@ function Home() {
               placeholder="例: 5000 (半角数字のみ)"
             />
             {errors.management_fee && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.management_fee}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.management_fee}
+              </p>
             )}
           </div>
 
@@ -507,13 +646,19 @@ function Home() {
               placeholder="例: 30 (半角数字のみ)"
             />
             {errors.total_units && (
-              <p className="error-message" style={{ fontSize: "1rem" }}>{errors.total_units}</p>
+              <p className="error-message" style={{ fontSize: "1rem" }}>
+                {errors.total_units}
+              </p>
             )}
           </div>
         </div>
 
         <hr
-          style={{ margin: "100px auto 80px", width: "80%", borderColor: "#ddd" }}
+          style={{
+            margin: "100px auto 80px",
+            width: "80%",
+            borderColor: "#ddd",
+          }}
         />
 
         <div style={{ marginTop: "1rem" }}>
