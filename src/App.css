@@ -38,6 +38,15 @@ body {
   text-align: center;
 }
 
+.home-description {
+  color: #6b7280; /* gray-500 */
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
 .form-container h3 {
   font-family: "Spline Sans", sans-serif;
   font-size: 1.2rem;

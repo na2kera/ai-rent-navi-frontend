@@ -355,6 +355,10 @@ function Home() {
   return (
     <div className="form-container">
       <h1>AI家賃ナビ</h1>
+      <p className="home-description">
+        物件の基本情報を入力するだけで、周辺相場や物件条件をもとに AI が妥当な提示家賃を推論します。
+        入力内容の確認にお役立てください（結果は目安です）。
+      </p>
 
       <button
         type="button"
