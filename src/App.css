@@ -47,6 +47,40 @@ body {
   text-align: center;
 }
 
+.hint-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background-color: #e5e7eb; /* gray-200 */
+  color: #444;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #d1d5db; /* gray-300 */
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.hint-icon:hover,
+.hint-icon:focus {
+  background-color: #d1d5db; /* gray-300 */
+  outline: none;
+}
+
+.hint-text {
+  color: #6b7280; /* gray-500 */
+  background-color: #f3f4f6; /* gray-100 */
+  border: 1px solid #e5e7eb; /* gray-200 */
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin: 6px 0 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 .form-container h3 {
   font-family: "Spline Sans", sans-serif;
   font-size: 1.2rem;

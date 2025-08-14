@@ -39,6 +39,8 @@ function Home() {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOcrModalOpen, setIsOcrModalOpen] = useState(false);
+  const [showHintManagementFee, setShowHintManagementFee] = useState(false);
+  const [showHintTotalUnits, setShowHintTotalUnits] = useState(false);
 
   // 半角数字のみ・整数かを判定
   const isValidInteger = (value: string) =>
@@ -356,7 +358,8 @@ function Home() {
     <div className="form-container">
       <h1>AI家賃ナビ</h1>
       <p className="home-description">
-        物件の基本情報を入力するだけで、周辺相場や物件条件をもとに AI が妥当な提示家賃を推論します。
+        物件の基本情報を入力するだけで、周辺相場や物件条件をもとに AI
+        が妥当な提示家賃を推論します。
         入力内容の確認にお役立てください（結果は目安です）。
       </p>
 
@@ -653,7 +656,22 @@ function Home() {
         {/* オプション項目: 管理費、総戸数 */}
         <div className="form-row">
           <div className="form-group">
-            <label>管理費 (円)</label>
+            <label>
+              管理費 (円)
+              <button
+                type="button"
+                className="hint-icon"
+                aria-label="管理費の説明"
+                onClick={() => setShowHintManagementFee((v) => !v)}
+              >
+                ?
+              </button>
+            </label>
+            {showHintManagementFee && (
+              <div className="hint-text">
+                物件の賃料とは別に毎月支払う、共用部の清掃や設備維持にかかる費用です。
+              </div>
+            )}
             <input
               type="text"
               value={kanrihi}
@@ -668,7 +686,22 @@ function Home() {
           </div>
 
           <div className="form-group">
-            <label>総戸数 (マンションの場合)</label>
+            <label>
+              総戸数 (マンションの場合)
+              <button
+                type="button"
+                className="hint-icon"
+                aria-label="総戸数の説明"
+                onClick={() => setShowHintTotalUnits((v) => !v)}
+              >
+                ?
+              </button>
+            </label>
+            {showHintTotalUnits && (
+              <div className="hint-text">
+                マンション全体の住戸数です。物件の規模感の把握に利用します。
+              </div>
+            )}
             <input
               type="text"
               value={soukosuu}
