@@ -20,6 +20,7 @@ function Home() {
     location.state?.distance_from_station?.toString() || ""
   ); // 最寄駅からの分数
   const [area, setArea] = useState(location.state?.area?.toString() || ""); // 面積
+  const [areaUnit, setAreaUnit] = useState<"sqm" | "tatami">("sqm"); // 面積の単位
   const [age, setAge] = useState(location.state?.age?.toString() || ""); // 築年数
   const [structure, setStructure] = useState(
     location.state?.structure?.toString() || ""
@@ -255,6 +256,10 @@ function Home() {
       ? nearest_station.trim().slice(0, -1)
       : nearest_station.trim();
 
+    // 畳→平米に変換（1畳=1.62㎡で換算）
+    const areaM2 =
+      areaUnit === "tatami" ? parseFloat(area) * 1.62 : parseFloat(area);
+
     // 数値項目をnumber型に変換（オプション項目は空文字の場合undefinedにする）
     // こちらも指定された順序に並べ替え
     navigate("/result", {
@@ -263,7 +268,7 @@ function Home() {
         city: backendRegionKey,
         nearest_station: sanitizedStation,
         distance_from_station: parseInt(station_distance),
-        area: parseFloat(area),
+        area: areaM2,
         age: parseInt(age),
         structure: parseInt(structure),
         layout: parseInt(layout),
@@ -534,7 +539,7 @@ function Home() {
         <div className="form-row">
           <div className="form-group">
             <label>
-              面積 (㎡)<span className="required-asterisk">*</span>
+              面積<span className="required-asterisk">*</span>
             </label>
             <input
               type="text"
@@ -543,6 +548,22 @@ function Home() {
               placeholder="例: 40 (半角数字のみ)"
               required
             />
+            <div>
+              <label htmlFor="areaUnit" style={{ marginRight: "8px" }}>
+                単位:
+              </label>
+              <select
+                id="areaUnit"
+                value={areaUnit}
+                onChange={(e) =>
+                  setAreaUnit(e.target.value as "sqm" | "tatami")
+                }
+                style={{ minWidth: "120px" }}
+              >
+                <option value="sqm">㎡（平米）</option>
+                <option value="tatami">畳（帖）</option>
+              </select>
+            </div>
             {errors.area && (
               <p className="error-message" style={{ fontSize: "1rem" }}>
                 {errors.area}
