@@ -20,6 +20,7 @@ function Home() {
     location.state?.distance_from_station?.toString() || ""
   ); // 最寄駅からの分数
   const [area, setArea] = useState(location.state?.area?.toString() || ""); // 面積
+  const [areaUnit, setAreaUnit] = useState<"sqm" | "tatami">("sqm"); // 面積の単位
   const [age, setAge] = useState(location.state?.age?.toString() || ""); // 築年数
   const [structure, setStructure] = useState(
     location.state?.structure?.toString() || ""
@@ -39,12 +40,17 @@ function Home() {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOcrModalOpen, setIsOcrModalOpen] = useState(false);
+  const [showHintManagementFee, setShowHintManagementFee] = useState(false);
+  const [showHintTotalUnits, setShowHintTotalUnits] = useState(false);
 
   // 半角数字のみ・整数かを判定
   const isValidInteger = (value: string) =>
     /^[0-9]+$/.test(value) || value === ""; // 空文字も許容する
   // 空白が含まれているかチェック
   const hasWhitespace = (value: string) => /\s/.test(value);
+  // 半角数字（小数点可）を判定
+  const isValidDecimal = (value: string) =>
+    /^\d+(\.\d+)?$/.test(value) || value === "";
 
   const validate = (fieldKey?: string, fieldValue?: string) => {
     const newErrors: { [key: string]: string } = { ...errors }; // 現在のエラーをコピー
@@ -136,12 +142,22 @@ function Home() {
       } else if (hasWhitespace(value)) {
         newErrors[key] = "空白文字が含まれています。削除してください。";
       } else if (type === "number") {
-        if (!isValidInteger(value)) {
-          newErrors[key] = "半角数字のみ入力してください。(小数不可)";
-        } else if (Number(value) < 0) {
-          newErrors[key] = "0以上を入力してください。";
+        if (key === "area") {
+          if (!isValidDecimal(value)) {
+            newErrors[key] = "半角数字のみ入力してください。（小数可）";
+          } else if (Number(value) < 0) {
+            newErrors[key] = "0以上を入力してください。";
+          } else {
+            delete newErrors[key];
+          }
         } else {
-          delete newErrors[key]; // エラーが解消されたら削除
+          if (!isValidInteger(value)) {
+            newErrors[key] = "半角数字のみ入力してください。(小数不可)";
+          } else if (Number(value) < 0) {
+            newErrors[key] = "0以上を入力してください。";
+          } else {
+            delete newErrors[key]; // エラーが解消されたら削除
+          }
         }
       } else {
         delete newErrors[key]; // エラーが解消されたら削除
@@ -253,6 +269,10 @@ function Home() {
       ? nearest_station.trim().slice(0, -1)
       : nearest_station.trim();
 
+    // 畳→平米に変換（1畳=1.62㎡で換算）
+    const areaM2 =
+      areaUnit === "tatami" ? parseFloat(area) * 1.62 : parseFloat(area);
+
     // 数値項目をnumber型に変換（オプション項目は空文字の場合undefinedにする）
     // こちらも指定された順序に並べ替え
     navigate("/result", {
@@ -261,7 +281,7 @@ function Home() {
         city: backendRegionKey,
         nearest_station: sanitizedStation,
         distance_from_station: parseInt(station_distance),
-        area: parseFloat(area),
+        area: areaM2,
         age: parseInt(age),
         structure: parseInt(structure),
         layout: parseInt(layout),
@@ -355,6 +375,11 @@ function Home() {
   return (
     <div className="form-container">
       <h1>AI家賃ナビ</h1>
+      <p className="home-description">
+        物件の基本情報を入力するだけで、周辺相場や物件条件をもとに AI
+        が妥当な提示家賃を推論します。
+        入力内容の確認にお役立てください（結果は目安です）。
+      </p>
 
       <button
         type="button"
@@ -480,6 +505,9 @@ function Home() {
             <label>
               最寄り駅 (駅名)<span className="required-asterisk">*</span>
             </label>
+            <p className="field-note">
+              最寄駅は徒歩での利用を前提としています。
+            </p>
             <input
               type="text"
               value={nearest_station}
@@ -487,6 +515,7 @@ function Home() {
               placeholder="例: 荻窪 (“駅”はつけない )"
               required
             />
+
             {errors.nearest_station && (
               <p className="error-message" style={{ fontSize: "1rem" }}>
                 {errors.nearest_station}
@@ -523,15 +552,27 @@ function Home() {
         <div className="form-row">
           <div className="form-group">
             <label>
-              面積 (㎡)<span className="required-asterisk">*</span>
+              面積<span className="required-asterisk">*</span>
             </label>
-            <input
-              type="text"
-              value={area}
-              onChange={handleChange(setArea, "area")}
-              placeholder="例: 40 (半角数字のみ)"
-              required
-            />
+            <div className="area-inline">
+              <input
+                type="text"
+                inputMode="decimal"
+                value={area}
+                onChange={handleChange(setArea, "area")}
+                placeholder="例: 40.5 (半角数字・小数可)"
+                required
+              />
+              <select
+                id="areaUnit"
+                className="area-unit-select"
+                value={areaUnit}
+                onChange={(e) => setAreaUnit(e.target.value as "sqm" | "tatami")}
+              >
+                <option value="sqm">㎡（平米）</option>
+                <option value="tatami">畳（帖）</option>
+              </select>
+            </div>
             {errors.area && (
               <p className="error-message" style={{ fontSize: "1rem" }}>
                 {errors.area}
@@ -649,7 +690,22 @@ function Home() {
         {/* オプション項目: 管理費、総戸数 */}
         <div className="form-row">
           <div className="form-group">
-            <label>管理費 (円)</label>
+            <label>
+              管理費 (円)
+              <button
+                type="button"
+                className="hint-icon"
+                aria-label="管理費の説明"
+                onClick={() => setShowHintManagementFee((v) => !v)}
+              >
+                ?
+              </button>
+            </label>
+            {showHintManagementFee && (
+              <div className="hint-text">
+                物件の賃料とは別に毎月支払う、共用部の清掃や設備維持にかかる費用です。
+              </div>
+            )}
             <input
               type="text"
               value={kanrihi}
@@ -664,7 +720,22 @@ function Home() {
           </div>
 
           <div className="form-group">
-            <label>総戸数 (マンションの場合)</label>
+            <label>
+              総戸数 (マンションの場合)
+              <button
+                type="button"
+                className="hint-icon"
+                aria-label="総戸数の説明"
+                onClick={() => setShowHintTotalUnits((v) => !v)}
+              >
+                ?
+              </button>
+            </label>
+            {showHintTotalUnits && (
+              <div className="hint-text">
+                マンション全体の住戸数です。物件の規模感の把握に利用します。
+              </div>
+            )}
             <input
               type="text"
               value={soukosuu}

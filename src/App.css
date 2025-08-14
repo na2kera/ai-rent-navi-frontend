@@ -38,6 +38,80 @@ body {
   text-align: center;
 }
 
+.home-description {
+  color: #6b7280; /* gray-500 */
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.hint-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background-color: #e5e7eb; /* gray-200 */
+  color: #444;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #d1d5db; /* gray-300 */
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.hint-icon:hover,
+.hint-icon:focus {
+  background-color: #d1d5db; /* gray-300 */
+  outline: none;
+}
+
+.hint-text {
+  color: #6b7280; /* gray-500 */
+  background-color: #f3f4f6; /* gray-100 */
+  border: 1px solid #e5e7eb; /* gray-200 */
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin: 6px 0 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.field-note {
+  color: #6b7280; /* gray-500 */
+  font-size: 0.9rem;
+  margin-top: 4px;
+  margin-bottom: 0.25rem;
+}
+
+/* 面積フィールド用の横並びレイアウト */
+.area-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.area-inline input[type="text"],
+.area-inline select {
+  margin: 0; /* 既定の左右autoマージンを打ち消す */
+}
+
+.area-inline input[type="text"] {
+  flex: 1;
+  min-width: 200px; /* 未入力時でもある程度の幅を確保 */
+}
+
+.area-unit-select {
+  min-width: 140px;
+}
+
 .form-container h3 {
   font-family: "Spline Sans", sans-serif;
   font-size: 1.2rem;
