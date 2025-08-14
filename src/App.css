@@ -88,6 +88,30 @@ body {
   margin-bottom: 0.25rem;
 }
 
+/* 面積フィールド用の横並びレイアウト */
+.area-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.area-inline input[type="text"],
+.area-inline select {
+  margin: 0; /* 既定の左右autoマージンを打ち消す */
+}
+
+.area-inline input[type="text"] {
+  flex: 1;
+  min-width: 200px; /* 未入力時でもある程度の幅を確保 */
+}
+
+.area-unit-select {
+  min-width: 140px;
+}
+
 .form-container h3 {
   font-family: "Spline Sans", sans-serif;
   font-size: 1.2rem;

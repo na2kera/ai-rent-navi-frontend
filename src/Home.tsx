@@ -541,24 +541,19 @@ function Home() {
             <label>
               面積<span className="required-asterisk">*</span>
             </label>
-            <input
-              type="text"
-              value={area}
-              onChange={handleChange(setArea, "area")}
-              placeholder="例: 40 (半角数字のみ)"
-              required
-            />
-            <div>
-              <label htmlFor="areaUnit" style={{ marginRight: "8px" }}>
-                単位:
-              </label>
+            <div className="area-inline">
+              <input
+                type="text"
+                value={area}
+                onChange={handleChange(setArea, "area")}
+                placeholder="例: 40 (半角数字のみ)"
+                required
+              />
               <select
                 id="areaUnit"
+                className="area-unit-select"
                 value={areaUnit}
-                onChange={(e) =>
-                  setAreaUnit(e.target.value as "sqm" | "tatami")
-                }
-                style={{ minWidth: "120px" }}
+                onChange={(e) => setAreaUnit(e.target.value as "sqm" | "tatami")}
               >
                 <option value="sqm">㎡（平米）</option>
                 <option value="tatami">畳（帖）</option>
