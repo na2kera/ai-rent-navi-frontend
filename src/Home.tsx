@@ -48,6 +48,9 @@ function Home() {
     /^[0-9]+$/.test(value) || value === ""; // 空文字も許容する
   // 空白が含まれているかチェック
   const hasWhitespace = (value: string) => /\s/.test(value);
+  // 半角数字（小数点可）を判定
+  const isValidDecimal = (value: string) =>
+    /^\d+(\.\d+)?$/.test(value) || value === "";
 
   const validate = (fieldKey?: string, fieldValue?: string) => {
     const newErrors: { [key: string]: string } = { ...errors }; // 現在のエラーをコピー
@@ -139,12 +142,22 @@ function Home() {
       } else if (hasWhitespace(value)) {
         newErrors[key] = "空白文字が含まれています。削除してください。";
       } else if (type === "number") {
-        if (!isValidInteger(value)) {
-          newErrors[key] = "半角数字のみ入力してください。(小数不可)";
-        } else if (Number(value) < 0) {
-          newErrors[key] = "0以上を入力してください。";
+        if (key === "area") {
+          if (!isValidDecimal(value)) {
+            newErrors[key] = "半角数字のみ入力してください。（小数可）";
+          } else if (Number(value) < 0) {
+            newErrors[key] = "0以上を入力してください。";
+          } else {
+            delete newErrors[key];
+          }
         } else {
-          delete newErrors[key]; // エラーが解消されたら削除
+          if (!isValidInteger(value)) {
+            newErrors[key] = "半角数字のみ入力してください。(小数不可)";
+          } else if (Number(value) < 0) {
+            newErrors[key] = "0以上を入力してください。";
+          } else {
+            delete newErrors[key]; // エラーが解消されたら削除
+          }
         }
       } else {
         delete newErrors[key]; // エラーが解消されたら削除
@@ -544,9 +557,11 @@ function Home() {
             <div className="area-inline">
               <input
                 type="text"
+                inputMode="decimal"
+                pattern="^\\d+(\\.\\d+)?$"
                 value={area}
                 onChange={handleChange(setArea, "area")}
-                placeholder="例: 40 (半角数字のみ)"
+                placeholder="例: 40.5 (半角数字・小数可)"
                 required
               />
               <select
