@@ -558,7 +558,6 @@ function Home() {
               <input
                 type="text"
                 inputMode="decimal"
-                pattern="^\\d+(\\.\\d+)?$"
                 value={area}
                 onChange={handleChange(setArea, "area")}
                 placeholder="例: 40.5 (半角数字・小数可)"
