@@ -487,6 +487,9 @@ function Home() {
             <label>
               最寄り駅 (駅名)<span className="required-asterisk">*</span>
             </label>
+            <p className="field-note">
+              最寄駅は徒歩での利用を前提としています。
+            </p>
             <input
               type="text"
               value={nearest_station}
@@ -494,6 +497,7 @@ function Home() {
               placeholder="例: 荻窪 (“駅”はつけない )"
               required
             />
+
             {errors.nearest_station && (
               <p className="error-message" style={{ fontSize: "1rem" }}>
                 {errors.nearest_station}

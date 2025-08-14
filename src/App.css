@@ -81,6 +81,13 @@ body {
   line-height: 1.5;
 }
 
+.field-note {
+  color: #6b7280; /* gray-500 */
+  font-size: 0.9rem;
+  margin-top: 4px;
+  margin-bottom: 0.25rem;
+}
+
 .form-container h3 {
   font-family: "Spline Sans", sans-serif;
   font-size: 1.2rem;
