@@ -400,31 +400,26 @@ function Home() {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} style={{ position: "relative" }}>
+      <form onSubmit={handleSubmit} className="modern-form">
         <button
           type="button"
           onClick={handleReset}
           className="detail-toggle-button"
           style={{
-            position: "absolute",
-            top: "-120px",
-            left: "0",
-            width: "70px",
-            fontSize: "11px",
-            padding: "4px 8px",
-            minHeight: "28px",
-            backgroundColor: "#6c757d",
-            borderColor: "#6c757d",
+            width: "90px",
+            fontSize: "12px",
+            padding: "6px 10px",
+            minHeight: "32px",
+            background: "#6c757d",
             boxShadow: "none",
+            marginBottom: "8px",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#5a6268";
-            e.currentTarget.style.borderColor = "#5a6268";
+            e.currentTarget.style.background = "#5a6268";
             e.currentTarget.style.boxShadow = "none";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "#6c757d";
-            e.currentTarget.style.borderColor = "#6c757d";
+            e.currentTarget.style.background = "#6c757d";
             e.currentTarget.style.boxShadow = "none";
           }}
         >
@@ -608,18 +603,20 @@ function Home() {
             <label>
               構造<span className="required-asterisk">*</span>
             </label>
-            <select
-              value={structure}
-              onChange={handleChange(setStructure, "structure")}
-              required
-            >
-              <option value="">選択してください</option>
-              <option value="1">木造</option>
-              <option value="2">S造 (鉄骨造)</option>
-              <option value="3">RC造 (鉄筋コンクリート造)</option>
-              <option value="4">SRC造 (鉄骨鉄筋コンクリート造)</option>
-              <option value="5">その他</option>
-            </select>
+            <div className="select-wrapper">
+              <select
+                value={structure}
+                onChange={handleChange(setStructure, "structure")}
+                required
+              >
+                <option value="">選択してください</option>
+                <option value="1">木造</option>
+                <option value="2">S造 (鉄骨造)</option>
+                <option value="3">RC造 (鉄筋コンクリート造)</option>
+                <option value="4">SRC造 (鉄骨鉄筋コンクリート造)</option>
+                <option value="5">その他</option>
+              </select>
+            </div>
             {errors.structure && (
               <p className="error-message" style={{ fontSize: "1rem" }}>
                 {errors.structure}
@@ -634,25 +631,27 @@ function Home() {
             <label>
               間取り<span className="required-asterisk">*</span>
             </label>
-            <select
-              value={layout}
-              onChange={handleChange(setLayout, "layout")}
-              required
-            >
-              <option value="">選択してください</option>
-              <option value="1">1K</option>
-              <option value="2">1DK</option>
-              <option value="3">1LDK</option>
-              <option value="4">2K</option>
-              <option value="5">2DK</option>
-              <option value="6">2LDK</option>
-              <option value="7">3K</option>
-              <option value="8">3DK</option>
-              <option value="9">3LDK</option>
-              <option value="10">4K</option>
-              <option value="11">4DK</option>
-              <option value="12">4LDK以上</option>
-            </select>
+            <div className="select-wrapper">
+              <select
+                value={layout}
+                onChange={handleChange(setLayout, "layout")}
+                required
+              >
+                <option value="">選択してください</option>
+                <option value="1">1K</option>
+                <option value="2">1DK</option>
+                <option value="3">1LDK</option>
+                <option value="4">2K</option>
+                <option value="5">2DK</option>
+                <option value="6">2LDK</option>
+                <option value="7">3K</option>
+                <option value="8">3DK</option>
+                <option value="9">3LDK</option>
+                <option value="10">4K</option>
+                <option value="11">4DK</option>
+                <option value="12">4LDK以上</option>
+              </select>
+            </div>
             {errors.layout && (
               <p className="error-message" style={{ fontSize: "1rem" }}>
                 {errors.layout}

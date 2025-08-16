@@ -15,14 +15,28 @@ body {
 .form-container {
   width: 100%;
   max-width: 98%;
-  background-color: transparent;
+  background: #ffffff; /* 統一 */
   padding: 30px 20px 15px;
-  border-radius: 20px;
+  border: 1px solid var(--cute-border); /* 枠は本体で描画 */
+  border-radius: 18px; /* 半径を18pxに統一 */
+  box-shadow: 0 10px 30px rgba(255, 95, 162, 0.08);
   text-align: left;
   color: #222;
   margin: 0 auto 20px;
+  position: relative;
+  overflow: visible; /* 子要素によるクリッピング防止 */
 }
 
+/* 枠を最前面に固定（Chromeで子要素の描画が境界を“隠す”のを防止） */
+.form-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--cute-border);
+  border-radius: 18px;
+  pointer-events: none;
+  z-index: 2;
+}
 
 .form-container h1 {
   font-family: "Spline Sans", sans-serif;
@@ -93,14 +107,15 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  width: 96%;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .area-inline input[type="text"],
 .area-inline select {
   margin: 0; /* 既定の左右autoマージンを打ち消す */
+  width: auto !important; /* グローバル幅指定を上書きしてフレックス配置を崩さない */
 }
 
 .area-inline input[type="text"] {
@@ -110,6 +125,7 @@ body {
 
 .area-unit-select {
   min-width: 140px;
+  flex: 0 0 140px; /* 右側の単位セレクトの固定幅を保証 */
 }
 
 .form-container h3 {
@@ -151,15 +167,15 @@ label {
 input,
 select,
 textarea {
-  width: 96% !important;
+  width: 100%;
   max-width: none;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 0;
+  margin-right: 0;
   padding: 8px 12px;
   min-height: 40px;
   border-radius: 12px;
-  background-color:#F6F2F4;
+  background-color: #f6f2f4;
   border: 1px solid #896070;
   font-family: "Spline Sans", sans-serif;
   font-size: 1rem;
@@ -167,6 +183,8 @@ textarea {
   text-align: left;
   transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   box-shadow: none;
+  background-clip: padding-box; /* ボーダー欠け対策 */
+  box-sizing: border-box; /* prevent overflow and clipping at edges */
 }
 
 input::placeholder,
@@ -177,6 +195,16 @@ textarea::placeholder {
 
 select {
   color: #896070;
+  -webkit-appearance: none; /* iOS/Safari のネイティブ描画を無効化 */
+  appearance: none;
+  background-clip: padding-box;
+  overflow: visible; /* top-border clipping を防ぐ */
+  padding-right: 36px; /* カスタム矢印分の余白 */
+  background-image: none; /* 矢印は .select-wrapper 側で描画 */
+  -webkit-transform: translateZ(0); /* Safari border rendering fix */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  border: 1px solid var(--cute-border); /* 通常のボーダーで安定表示 */
 }
 select:valid {
   color: #222;
@@ -186,8 +214,8 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: #ea115b;
-  box-shadow: 0 0 0 2px rgba(234, 17, 91, 0.3);
+  border-color: var(--cute-accent);
+  box-shadow: 0 0 0 3px rgba(234, 17, 91, 0.25); /* 外側のやわらかい強調のみ */
 }
 
 input::-webkit-outer-spin-button,
@@ -260,7 +288,7 @@ input::-webkit-inner-spin-button {
   display: inline-block;
   width: auto;
   min-width: 120px;
-  background-color: #ea115b;
+  background: linear-gradient(135deg, var(--cute-secondary), var(--cute-secondary-2)); /* ラベンダーで可愛く */
   border-radius: 12px;
   min-height: 44px;
   padding: 10px 20px;
@@ -272,20 +300,20 @@ input::-webkit-inner-spin-button {
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s;
-  box-shadow: 0 2px 8px rgba(234, 17, 91, 0.3);
+  box-shadow: 0 2px 8px rgba(169, 147, 255, 0.35);
   transform: none;
 }
 
 .history-header-button:hover,
 .history-header-button:focus {
-  background-color: #d60f4d;
+  background: linear-gradient(135deg, #9a86ff, #bdaeff);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(234, 17, 91, 0.4);
+  box-shadow: 0 4px 12px rgba(169, 147, 255, 0.5);
   outline: none;
 }
 
 .history-header-button.danger {
-  background-color: #dc3545;
+  background: linear-gradient(135deg, var(--cute-danger-1), var(--cute-danger-2));
 }
 
 .history-header-button.danger:hover,
@@ -295,7 +323,7 @@ input::-webkit-inner-spin-button {
 
 /* 履歴アクションボタン用 */
 .history-action-button {
-  background-color: #ea115b;
+  background: linear-gradient(135deg, var(--cute-success), var(--cute-success-2)); /* ミントで可愛く */
   border-radius: 12px;
   min-height: 44px;
   padding: 10px 16px;
@@ -307,20 +335,20 @@ input::-webkit-inner-spin-button {
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s;
-  box-shadow: 0 2px 8px rgba(234, 17, 91, 0.3);
+  box-shadow: 0 2px 8px rgba(89, 211, 154, 0.4);
   white-space: nowrap;
 }
 
 .history-action-button:hover,
 .history-action-button:focus {
-  background-color: #d60f4d;
+  background: linear-gradient(135deg, #4fcf95, #9eeec9);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(234, 17, 91, 0.4);
+  box-shadow: 0 4px 12px rgba(89, 211, 154, 0.55);
   outline: none;
 }
 
 .history-action-button.danger {
-  background-color: #dc3545;
+  background: linear-gradient(135deg, var(--cute-danger-1), var(--cute-danger-2));
 }
 
 .history-action-button.danger:hover,
@@ -464,7 +492,7 @@ input::-webkit-inner-spin-button {
   .form-container {
     padding: 20px 15px 10px;
     max-width: 100%;
-    max-height: calc(100vh - (10px + 70px + 10px));
+    max-height: none;
     margin-bottom: 10px;
   }
   .form-container h1 {
@@ -481,7 +509,7 @@ input::-webkit-inner-spin-button {
     padding: 6px 10px;
     min-height: 36px;
     font-size: 0.95rem;
-    width: 94% !important;
+    width: 100%;
   }
 
   .error-message {
@@ -642,7 +670,7 @@ input::-webkit-inner-spin-button {
     padding-bottom: 110px;
   }
   .form-container {
-    max-height: calc(100vh - (30px + 110px + 30px));
+    max-height: none; /* 100vh に縛らない */
     padding: 40px 30px 20px;
     margin-bottom: 30px;
   }
@@ -658,7 +686,7 @@ input::-webkit-inner-spin-button {
     padding: 10px 14px;
     min-height: 44px;
     font-size: 1.05rem;
-    width: 96% !important;
+    width: 100%;
   }
 
   .error-message {
@@ -1042,6 +1070,147 @@ input::-webkit-inner-spin-button {
 }
 
 .required-asterisk {
-  color: #dc3545; 
+  color: #dc3545;
   margin-left: 4px;
+}
+
+:root {
+  --cute-bg1: #fff7fb;
+  --cute-bg2: #f7fbff;
+  --cute-accent: #ff5fa2;
+  --cute-accent-2: #ff8ac0;
+  --cute-border: #ffd6e8;
+  --cute-input-bg: #fff2f7;
+  --cute-text: #4a2d35;
+  /* pastel theme additions */
+  --cute-secondary: #a993ff; /* lavender */
+  --cute-secondary-2: #c5b5ff;
+  --cute-success: #59d39a; /* mint */
+  --cute-success-2: #a8f0cd;
+  --cute-danger-1: #ff6b88; /* soft red */
+  --cute-danger-2: #ff8aa6;
+}
+
+/* Soft pastel background bubbles */
+body {
+  background: radial-gradient(
+      1200px 800px at 20% -10%,
+      var(--cute-bg1),
+      transparent 60%
+    ),
+    radial-gradient(1000px 600px at 120% 10%, var(--cute-bg2), transparent 50%);
+}
+
+/* Card-like form container - 統一のため ::after は使用しない */
+
+/* Inputs */
+input,
+select,
+textarea {
+  background-color: var(--cute-input-bg);
+  border-color: var(--cute-border);
+  color: var(--cute-text);
+}
+
+/* Create stable stacking and keep controls above adjacent effects */
+.modern-form {
+  position: relative;
+  isolation: isolate; /* new stacking context */
+}
+
+.form-row,
+.form-group {
+  position: relative;
+  z-index: 0;
+}
+
+input,
+select,
+textarea {
+  position: relative;
+  z-index: 0; /* 親の ::after 枠( z-index:2 ) より下にする */
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #bf6b86;
+}
+
+/* focus スタイルは前半の定義（inset + outer glow）に統一 */
+
+/* Hints */
+.hint-icon {
+  background-color: #ffe3ef;
+  border-color: var(--cute-border);
+  color: #bf446e;
+}
+
+.hint-text {
+  background-color: #fff7fb;
+  border-color: #ffe3ef;
+  color: #8a5a6a;
+}
+
+.field-note {
+  color: #8a5a6a;
+}
+
+/* Buttons */
+.submit-button,
+.detail-toggle-button,
+.capture-button,
+.confirm-button {
+  background: linear-gradient(135deg, var(--cute-accent), var(--cute-accent-2));
+  box-shadow: 0 8px 20px rgba(255, 95, 162, 0.25);
+}
+
+.submit-button:hover,
+.detail-toggle-button:hover,
+.history-header-button:hover,
+.history-action-button:hover,
+.capture-button:hover,
+.confirm-button:hover {
+  filter: brightness(1.04);
+  transform: translateY(-2px);
+}
+
+.submit-button:active,
+.detail-toggle-button:active,
+.history-header-button:active,
+.history-action-button:active,
+.capture-button:active,
+.confirm-button:active {
+  transform: translateY(0);
+}
+
+/* Area field subtle rounding alignment */
+.area-inline input[type="text"],
+.area-unit-select {
+  border-radius: 14px;
+}
+
+/* Custom select arrow via wrapper to avoid border/clip issues */
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.select-wrapper select {
+  background-image: none !important; /* use wrapper arrow */
+  padding-right: 40px; /* space for arrow */
+}
+
+.select-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23896070'%3E%3Cpath d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z'/%3E%3C/svg%3E");
 }
