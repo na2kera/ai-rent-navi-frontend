@@ -288,7 +288,7 @@ input::-webkit-inner-spin-button {
   display: inline-block;
   width: auto;
   min-width: 120px;
-  background-color: #ea115b;
+  background: linear-gradient(135deg, var(--cute-secondary), var(--cute-secondary-2)); /* ラベンダーで可愛く */
   border-radius: 12px;
   min-height: 44px;
   padding: 10px 20px;
@@ -300,20 +300,20 @@ input::-webkit-inner-spin-button {
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s;
-  box-shadow: 0 2px 8px rgba(234, 17, 91, 0.3);
+  box-shadow: 0 2px 8px rgba(169, 147, 255, 0.35);
   transform: none;
 }
 
 .history-header-button:hover,
 .history-header-button:focus {
-  background-color: #d60f4d;
+  background: linear-gradient(135deg, #9a86ff, #bdaeff);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(234, 17, 91, 0.4);
+  box-shadow: 0 4px 12px rgba(169, 147, 255, 0.5);
   outline: none;
 }
 
 .history-header-button.danger {
-  background-color: #dc3545;
+  background: linear-gradient(135deg, var(--cute-danger-1), var(--cute-danger-2));
 }
 
 .history-header-button.danger:hover,
@@ -323,7 +323,7 @@ input::-webkit-inner-spin-button {
 
 /* 履歴アクションボタン用 */
 .history-action-button {
-  background-color: #ea115b;
+  background: linear-gradient(135deg, var(--cute-success), var(--cute-success-2)); /* ミントで可愛く */
   border-radius: 12px;
   min-height: 44px;
   padding: 10px 16px;
@@ -335,20 +335,20 @@ input::-webkit-inner-spin-button {
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s;
-  box-shadow: 0 2px 8px rgba(234, 17, 91, 0.3);
+  box-shadow: 0 2px 8px rgba(89, 211, 154, 0.4);
   white-space: nowrap;
 }
 
 .history-action-button:hover,
 .history-action-button:focus {
-  background-color: #d60f4d;
+  background: linear-gradient(135deg, #4fcf95, #9eeec9);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(234, 17, 91, 0.4);
+  box-shadow: 0 4px 12px rgba(89, 211, 154, 0.55);
   outline: none;
 }
 
 .history-action-button.danger {
-  background-color: #dc3545;
+  background: linear-gradient(135deg, var(--cute-danger-1), var(--cute-danger-2));
 }
 
 .history-action-button.danger:hover,
@@ -1082,6 +1082,13 @@ input::-webkit-inner-spin-button {
   --cute-border: #ffd6e8;
   --cute-input-bg: #fff2f7;
   --cute-text: #4a2d35;
+  /* pastel theme additions */
+  --cute-secondary: #a993ff; /* lavender */
+  --cute-secondary-2: #c5b5ff;
+  --cute-success: #59d39a; /* mint */
+  --cute-success-2: #a8f0cd;
+  --cute-danger-1: #ff6b88; /* soft red */
+  --cute-danger-2: #ff8aa6;
 }
 
 /* Soft pastel background bubbles */
@@ -1151,8 +1158,6 @@ textarea::placeholder {
 /* Buttons */
 .submit-button,
 .detail-toggle-button,
-.history-header-button,
-.history-action-button,
 .capture-button,
 .confirm-button {
   background: linear-gradient(135deg, var(--cute-accent), var(--cute-accent-2));
