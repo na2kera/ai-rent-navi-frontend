@@ -1,7 +1,8 @@
 import OcrCameraModal from "./OcrCameraModal";
+import ImageCropModal from "./ImageCropModal";
 import { PREFECTURES, REGION_MAPPING } from "./constants/region";
 import { extractRentalPropertyData } from "./geminiService";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function Home() {
@@ -40,8 +41,11 @@ function Home() {
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOcrModalOpen, setIsOcrModalOpen] = useState(false);
+  const [isCropModalOpen, setIsCropModalOpen] = useState(false);
+  const [selectedImageSrc, setSelectedImageSrc] = useState<string | null>(null);
   const [showHintManagementFee, setShowHintManagementFee] = useState(false);
   const [showHintTotalUnits, setShowHintTotalUnits] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // 半角数字のみ・整数かを判定
   const isValidInteger = (value: string) =>
@@ -388,6 +392,37 @@ function Home() {
       >
         📷 OCR で読み取り
       </button>
+
+      {/* 画像ファイル選択ボタン + 隠し input */}
+      <div style={{ textAlign: "center", margin: "8px 0 16px" }}>
+        <button
+          type="button"
+          className="ocr-button"
+          onClick={() => fileInputRef.current?.click()}
+          style={{ width: "220px" }}
+        >
+          🖼 画像ファイルから選択
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+              const dataUrl = reader.result as string;
+              setSelectedImageSrc(dataUrl);
+              setIsCropModalOpen(true);
+              // クリアして同じファイル再選択可能に
+              if (fileInputRef.current) fileInputRef.current.value = "";
+            };
+            reader.readAsDataURL(file);
+          }}
+        />
+      </div>
 
       <div style={{ textAlign: "center", marginBottom: "1rem" }}>
         <button
@@ -768,6 +803,12 @@ function Home() {
         isOpen={isOcrModalOpen}
         onClose={() => setIsOcrModalOpen(false)}
         onCapture={handleOcrCapture}
+      />
+      <ImageCropModal
+        isOpen={isCropModalOpen}
+        src={selectedImageSrc}
+        onClose={() => setIsCropModalOpen(false)}
+        onCropped={handleOcrCapture}
       />
     </div>
   );
