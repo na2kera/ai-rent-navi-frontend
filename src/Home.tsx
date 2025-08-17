@@ -397,7 +397,7 @@ function Home() {
       <div style={{ textAlign: "center", margin: "8px 0 16px" }}>
         <button
           type="button"
-          className="detail-toggle-button"
+          className="ocr-button"
           onClick={() => fileInputRef.current?.click()}
           style={{ width: "220px" }}
         >
