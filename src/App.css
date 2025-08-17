@@ -288,7 +288,11 @@ input::-webkit-inner-spin-button {
   display: inline-block;
   width: auto;
   min-width: 120px;
-  background: linear-gradient(135deg, var(--cute-secondary), var(--cute-secondary-2)); /* ラベンダーで可愛く */
+  background: linear-gradient(
+    135deg,
+    var(--cute-secondary),
+    var(--cute-secondary-2)
+  ); /* ラベンダーで可愛く */
   border-radius: 12px;
   min-height: 44px;
   padding: 10px 20px;
@@ -313,7 +317,11 @@ input::-webkit-inner-spin-button {
 }
 
 .history-header-button.danger {
-  background: linear-gradient(135deg, var(--cute-danger-1), var(--cute-danger-2));
+  background: linear-gradient(
+    135deg,
+    var(--cute-danger-1),
+    var(--cute-danger-2)
+  );
 }
 
 .history-header-button.danger:hover,
@@ -323,7 +331,11 @@ input::-webkit-inner-spin-button {
 
 /* 履歴アクションボタン用 */
 .history-action-button {
-  background: linear-gradient(135deg, var(--cute-success), var(--cute-success-2)); /* ミントで可愛く */
+  background: linear-gradient(
+    135deg,
+    var(--cute-success),
+    var(--cute-success-2)
+  ); /* ミントで可愛く */
   border-radius: 12px;
   min-height: 44px;
   padding: 10px 16px;
@@ -348,7 +360,11 @@ input::-webkit-inner-spin-button {
 }
 
 .history-action-button.danger {
-  background: linear-gradient(135deg, var(--cute-danger-1), var(--cute-danger-2));
+  background: linear-gradient(
+    135deg,
+    var(--cute-danger-1),
+    var(--cute-danger-2)
+  );
 }
 
 .history-action-button.danger:hover,
@@ -861,6 +877,7 @@ input::-webkit-inner-spin-button {
   gap: 15px;
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 15px;
 }
 
 .capture-button,
