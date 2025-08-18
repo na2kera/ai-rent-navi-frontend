@@ -247,6 +247,7 @@ function Result() {
               {message}
             </h2>
             <div className={`diff-badge ${difference > 0 ? "higher" : "lower"}`}>
+              <span className="diff-icon" aria-hidden="true">{difference > 0 ? "🔺" : "🔻"}</span>
               <span>予測との差額</span>
               <span className="currency">¥</span>
               <span className="value">

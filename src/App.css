@@ -27,6 +27,11 @@ body {
   margin-right: 2px;
 }
 
+.diff-badge .diff-icon {
+  font-size: 1.05em;
+  line-height: 1;
+}
+
 .diff-badge.higher {
   background: rgba(220, 53, 69, 0.1);
   color: #b51d2b;
