@@ -213,35 +213,14 @@ function Result() {
 
   return (
     <div className="form-container result-container">
-      {/* 料金が適切かどうかを示す一番目立つメッセージ */}
-      {/* isReasonable が true の場合も赤文字にするため、ok クラスを付与し、App.css で色を調整 */}
-      <h2
-        className={`important-message ${getEvaluationClass(
-          data.price_evaluation
-        )}`}
-        style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "1rem" }}
-      >
-        {message}
-      </h2>
-
-      {/* 簡潔な結果表示 */}
-      <p>
-        だいたいの予測家賃: <span className="currency">¥</span>
-        <span className="value">
-          {Math.round(predictedRent).toLocaleString()}
-        </span>
-      </p>
-      <p>
-        予測との差額: <span className="currency">¥</span>
-        <span className="value">
-          {Math.round(Math.abs(difference)).toLocaleString()}
-        </span>{" "}
-        （
-        <span className={difference > 0 ? "price-higher" : "price-lower"}>
-          {difference > 0 ? "予測より高い" : "予測より安い"}
-        </span>
-        ）
-      </p>
+      {/* 予測家賃をトップに大きく表示（モダン・かわいいヒーロー） */}
+      <div className="predicted-hero">
+        <div className="predicted-label">だいたいの予測家賃</div>
+        <div className="predicted-amount">
+          <span className="currency">¥</span>
+          <span className="value">{Math.round(predictedRent).toLocaleString()}</span>
+        </div>
+      </div>
 
       {/* 詳細トグルボタン */}
       <button
@@ -257,84 +236,109 @@ function Result() {
           {" "}
           {/* detail-section クラスを適用 */}
           <hr className="result-divider" /> {/* 区切り線 */}
+          {/* 評価メッセージと差額は詳細内のパステルカードに表示 */}
+          <div className="evaluation-card">
+            <h2
+              className={`important-message ${getEvaluationClass(
+                data.price_evaluation
+              )}`}
+              style={{ marginBottom: "0.5rem" }}
+            >
+              {message}
+            </h2>
+            <div className={`diff-badge ${difference > 0 ? "higher" : "lower"}`}>
+              <span className="diff-icon" aria-hidden="true">{difference > 0 ? "🔺" : "🔻"}</span>
+              <span>予測との差額</span>
+              <span className="currency">¥</span>
+              <span className="value">
+                {Math.round(Math.abs(difference)).toLocaleString()}
+              </span>
+              <span className={difference > 0 ? "price-higher" : "price-lower"}>
+                {difference > 0 ? "予測より高い" : "予測より安い"}
+              </span>
+            </div>
+          </div>
+
           <h3>入力情報の詳細</h3> {/* 詳細情報のタイトル */}
-          <p>
-            <strong>住所:</strong>{" "}
-            <span className="value">{prefecture || "N/A"}</span>
-            <span className="value">{REVERSE_REGION_MAPPING[city] || city || "N/A"}</span>
-          </p>
-          <p>
-            <strong>最寄り駅:</strong>{" "}
-            <span className="value">{nearest_station || "N/A"}</span>
-          </p>
-          <p>
-            <strong>最寄駅からの分数:</strong>{" "}
-            <span className="value">{distance_from_station || "N/A"}</span> 分
-          </p>
-          <p>
-            <strong>面積:</strong>{" "}
-            <span className="value">{area || "N/A"}</span> ㎡
-          </p>
-          <p>
-            <strong>築年数:</strong>{" "}
-            <span className="value">{age || "N/A"}</span> 年
-          </p>
-          <p>
-            <strong>構造:</strong>{" "}
-            <span className="value">{displayStructure || "N/A"}</span>
-          </p>
-          <p>
-            <strong>間取り:</strong>{" "}
-            <span className="value">{displayLayout || "N/A"}</span>
-          </p>
-          <p>
-            <strong>現在の家賃:</strong> <span className="currency">¥</span>
-            <span className="value">
-              {(parseFloat(rent) || 0).toLocaleString()}
-            </span>
-          </p>
-          {/* 各種オプション情報の表示 (値が存在する場合のみ) */}
-          {management_fee && (
+          <div className="detail-grid">
             <p>
-              <strong>管理費:</strong> <span className="currency">¥</span>
+              <strong>住所:</strong>{" "}
+              <span className="value">{prefecture || "N/A"}</span>
+              <span className="value">{REVERSE_REGION_MAPPING[city] || city || "N/A"}</span>
+            </p>
+            <p>
+              <strong>最寄り駅:</strong>{" "}
+              <span className="value">{nearest_station || "N/A"}</span>
+            </p>
+            <p>
+              <strong>最寄駅からの分数:</strong>{" "}
+              <span className="value">{distance_from_station || "N/A"}</span> 分
+            </p>
+            <p>
+              <strong>面積:</strong>{" "}
+              <span className="value">{area || "N/A"}</span> ㎡
+            </p>
+            <p>
+              <strong>築年数:</strong>{" "}
+              <span className="value">{age || "N/A"}</span> 年
+            </p>
+            <p>
+              <strong>構造:</strong>{" "}
+              <span className="value">{displayStructure || "N/A"}</span>
+            </p>
+            <p>
+              <strong>間取り:</strong>{" "}
+              <span className="value">{displayLayout || "N/A"}</span>
+            </p>
+            <p>
+              <strong>現在の家賃:</strong> <span className="currency">¥</span>
               <span className="value">
-                {(parseFloat(management_fee) || 0).toLocaleString()}
+                {(parseFloat(rent) || 0).toLocaleString()}
               </span>
             </p>
-          )}
-          {total_units && (
-            <p>
-              <strong>総戸数:</strong>{" "}
-              <span className="value">{total_units}</span> 戸
-            </p>
-          )}
-          {parking_spaces && ( // 追加: 駐車場数
-            <p>
-              <strong>駐車場数:</strong>{" "}
-              <span className="value">{parking_spaces}</span>
-            </p>
-          )}
-          {deposit && ( // 追加: 敷金
-            <p>
-              <strong>敷金:</strong> <span className="currency">¥</span>
-              <span className="value">
-                {(parseFloat(deposit) || 0).toLocaleString()}
-              </span>
-            </p>
-          )}
-          {key_money && ( // 追加: 礼金
-            <p>
-              <strong>礼金:</strong> <span className="currency">¥</span>
-              <span className="value">
-                {(parseFloat(key_money) || 0).toLocaleString()}
-              </span>
-            </p>
-          )}
-          {conditions && ( // 追加: 条件
-            <p>
-              <strong>条件:</strong> <span className="value">{conditions}</span>
-            </p>
-          )}
+            {/* 各種オプション情報の表示 (値が存在する場合のみ) */}
+            {management_fee && (
+              <p>
+                <strong>管理費:</strong> <span className="currency">¥</span>
+                <span className="value">
+                  {(parseFloat(management_fee) || 0).toLocaleString()}
+                </span>
+              </p>
+            )}
+            {total_units && (
+              <p>
+                <strong>総戸数:</strong>{" "}
+                <span className="value">{total_units}</span> 戸
+              </p>
+            )}
+            {parking_spaces && ( // 追加: 駐車場数
+              <p>
+                <strong>駐車場数:</strong>{" "}
+                <span className="value">{parking_spaces}</span>
+              </p>
+            )}
+            {deposit && ( // 追加: 敷金
+              <p>
+                <strong>敷金:</strong> <span className="currency">¥</span>
+                <span className="value">
+                  {(parseFloat(deposit) || 0).toLocaleString()}
+                </span>
+              </p>
+            )}
+            {key_money && ( // 追加: 礼金
+              <p>
+                <strong>礼金:</strong> <span className="currency">¥</span>
+                <span className="value">
+                  {(parseFloat(key_money) || 0).toLocaleString()}
+                </span>
+              </p>
+            )}
+            {conditions && ( // 追加: 条件
+              <p>
+                <strong>条件:</strong> <span className="value">{conditions}</span>
+              </p>
+            )}
+          </div>
         </div>
       )}
 
