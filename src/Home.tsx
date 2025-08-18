@@ -127,13 +127,6 @@ function Home() {
         type: "number",
         msg: "間取り",
       },
-      {
-        key: "rent",
-        value:
-          fieldValue !== undefined && fieldKey === "rent" ? fieldValue : rent,
-        type: "number",
-        msg: "家賃価格",
-      },
     ];
 
     const fieldsToValidate = fieldKey
@@ -198,6 +191,12 @@ function Home() {
 
     // オプション項目に対する数字バリデーション (入力があれば数値チェック)
     const optionalNumberFields = [
+      {
+        key: "rent",
+        value:
+          fieldValue !== undefined && fieldKey === "rent" ? fieldValue : rent,
+        msg: "家賃価格",
+      },
       {
         key: "management_fee",
         value:
@@ -289,7 +288,7 @@ function Home() {
         age: parseInt(age),
         structure: parseInt(structure),
         layout: parseInt(layout),
-        rent: parseFloat(rent),
+        rent: rent === "" ? 0 : parseFloat(rent),
 
         management_fee: kanrihi === "" ? undefined : parseFloat(kanrihi),
         total_units: soukosuu === "" ? undefined : parseInt(soukosuu),
@@ -695,18 +694,20 @@ function Home() {
           </div>
         </div>
 
-        {/* 家賃価格 */}
+        <hr
+          style={{ margin: "20px auto", width: "80%", borderColor: "#ddd" }}
+        />
+        <h3>オプション情報 (任意)</h3>
+
+        {/* 家賃価格（任意） */}
         <div className="form-row">
           <div className="form-group">
-            <label>
-              家賃価格 (円)<span className="required-asterisk">*</span>
-            </label>
+            <label>家賃価格 (円)</label>
             <input
               type="text"
               value={rent}
               onChange={handleChange(setRent, "rent")}
               placeholder="例: 60000 (半角数字のみ)"
-              required
             />
             {errors.rent && (
               <p className="error-message" style={{ fontSize: "1rem" }}>
@@ -715,11 +716,6 @@ function Home() {
             )}
           </div>
         </div>
-
-        <hr
-          style={{ margin: "20px auto", width: "80%", borderColor: "#ddd" }}
-        />
-        <h3>オプション情報 (任意)</h3>
 
         {/* オプション項目: 管理費、総戸数 */}
         <div className="form-row">
