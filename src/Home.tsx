@@ -333,7 +333,11 @@ function Home() {
         setNearestStation(extractedData.nearest_station);
       if (extractedData.distance_from_station)
         setDistanceFromStation(extractedData.distance_from_station.toString());
-      if (extractedData.area) setArea(extractedData.area.toString());
+      if (extractedData.area) {
+        // OCRは常に㎡で返す（1畳=1.62㎡で換算済み）
+        setArea(extractedData.area.toString());
+        setAreaUnit("sqm");
+      }
       if (extractedData.age) setAge(extractedData.age.toString());
       if (extractedData.structure)
         setStructure(extractedData.structure.toString());
