@@ -12,6 +12,44 @@ body {
   padding-bottom: 90px; /* submit-button の高さとマージンを考慮 */
 }
 
+/* Cute pill badge for difference */
+.diff-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.diff-badge .currency {
+  margin-right: 2px;
+}
+
+.diff-badge.higher {
+  background: rgba(220, 53, 69, 0.1);
+  color: #b51d2b;
+}
+
+.diff-badge.lower {
+  background: rgba(89, 211, 154, 0.12);
+  color: #217a55;
+}
+
+/* Detail grid layout */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .detail-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .form-container {
   width: 100%;
   max-width: 98%;
@@ -380,6 +418,34 @@ input::-webkit-inner-spin-button {
   padding-bottom: 20px; /* ボタンとの隙間 */
 }
 
+/* Result hero for predicted amount */
+.predicted-hero {
+  margin: 0 auto 1.2rem;
+  padding: 14px 16px 18px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #fff7fb, #f7fbff);
+  border: 1px solid var(--cute-border);
+  box-shadow: 0 10px 24px rgba(255, 95, 162, 0.12);
+}
+
+.predicted-label {
+  font-size: 0.95rem;
+  color: #8a5a6a;
+  margin-bottom: 0.25rem;
+}
+
+.predicted-amount {
+  font-family: "Spline Sans", "Noto Sans JP", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.2rem, 6vw, 3.2rem);
+  letter-spacing: 0.5px;
+}
+
+.predicted-amount .currency {
+  color: #ea115b;
+  margin-right: 6px;
+}
+
 .result-container::-webkit-scrollbar {
   width: 8px;
 }
@@ -460,6 +526,16 @@ input::-webkit-inner-spin-button {
   font-size: 1.1em;
   margin-top: 1rem;
   text-align: center;
+}
+
+/* Pastel evaluation card */
+.evaluation-card {
+  background: linear-gradient(135deg, rgba(255, 247, 251, 0.9), rgba(247, 251, 255, 0.9));
+  border: 1px solid var(--cute-border);
+  border-radius: 14px;
+  padding: 10px 14px;
+  margin: 0.5rem auto 0.75rem;
+  box-shadow: 0 6px 16px rgba(169, 147, 255, 0.12);
 }
 
 /* 「現在の家賃は相場よりもかなり割安」を赤文字にするために、
