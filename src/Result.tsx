@@ -213,35 +213,16 @@ function Result() {
 
   return (
     <div className="form-container result-container">
-      {/* 料金が適切かどうかを示す一番目立つメッセージ */}
-      {/* isReasonable が true の場合も赤文字にするため、ok クラスを付与し、App.css で色を調整 */}
-      <h2
-        className={`important-message ${getEvaluationClass(
-          data.price_evaluation
-        )}`}
-        style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "1rem" }}
-      >
-        {message}
-      </h2>
-
-      {/* 簡潔な結果表示 */}
-      <p>
-        だいたいの予測家賃: <span className="currency">¥</span>
-        <span className="value">
-          {Math.round(predictedRent).toLocaleString()}
-        </span>
-      </p>
-      <p>
-        予測との差額: <span className="currency">¥</span>
-        <span className="value">
-          {Math.round(Math.abs(difference)).toLocaleString()}
-        </span>{" "}
-        （
-        <span className={difference > 0 ? "price-higher" : "price-lower"}>
-          {difference > 0 ? "予測より高い" : "予測より安い"}
-        </span>
-        ）
-      </p>
+      {/* 予測家賃をトップに大きく表示 */}
+      <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+        <div style={{ fontSize: "0.95rem", color: "#666", marginBottom: "0.25rem" }}>
+          だいたいの予測家賃
+        </div>
+        <div style={{ fontSize: "3rem", fontWeight: 800, letterSpacing: "1px" }}>
+          <span className="currency">¥</span>
+          <span className="value">{Math.round(predictedRent).toLocaleString()}</span>
+        </div>
+      </div>
 
       {/* 詳細トグルボタン */}
       <button
@@ -257,6 +238,26 @@ function Result() {
           {" "}
           {/* detail-section クラスを適用 */}
           <hr className="result-divider" /> {/* 区切り線 */}
+          {/* 評価メッセージと差額は詳細内に移動 */}
+          <h2
+            className={`important-message ${getEvaluationClass(
+              data.price_evaluation
+            )}`}
+            style={{ fontSize: "1.4rem", fontWeight: "bold", marginBottom: "0.75rem" }}
+          >
+            {message}
+          </h2>
+          <p style={{ marginTop: 0 }}>
+            予測との差額: <span className="currency">¥</span>
+            <span className="value">
+              {Math.round(Math.abs(difference)).toLocaleString()}
+            </span>{" "}
+            （
+            <span className={difference > 0 ? "price-higher" : "price-lower"}>
+              {difference > 0 ? "予測より高い" : "予測より安い"}
+            </span>
+            ）
+          </p>
           <h3>入力情報の詳細</h3> {/* 詳細情報のタイトル */}
           <p>
             <strong>住所:</strong>{" "}
